@@ -2,15 +2,9 @@
 % Please edit documentation in R/descriptives.R
 \name{desanaly}
 \alias{desanaly}
-\alias{kurt}
-\alias{skew}
 \title{Descriptive Analyses}
 \usage{
 desanaly(x, complete = TRUE, na.rm = FALSE)
-
-kurt(x, na.rm = FALSE)
-
-skew(x, na.rm = FALSE)
 }
 \arguments{
 \item{x}{vector, matrix, or data.frame of scores with one column

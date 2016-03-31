@@ -21,7 +21,8 @@ for a set of scored item responses when \code{sigma = TRUE}.}
 }
 \value{
 Returns a vector of estimated reliability coefficient,
-currently including alpha and omega.
+currently including alpha and omega. Coefficients can also be obtained
+individually with \code{alpha} and \code{omega}.
 }
 \description{
 Functions for estimating internal consistency reliability for a matrix

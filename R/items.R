@@ -14,6 +14,7 @@
 #' data.frame of item analysis output, \code{scale} containing descriptives
 #' for the full scale, and \code{reliability} containing a vector of
 #' internal consistency reliability estimates.
+#' @export
 itemanaly <- function(x, subset = 1:ncol(x), scores) {
 
   x <- as.matrix(x[, subset])

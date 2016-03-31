@@ -11,6 +11,7 @@
 #' ignored and \code{x} is simply reverse coded. Assumes all possible values
 #' are at least ordinal scale quantitative and observed.
 #' @return Returns a vector of recoded scores.
+#' @export
 recode <- function(x, old, new = names(old), rev = TRUE) {
 
 	if(rev) {

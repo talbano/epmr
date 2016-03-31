@@ -8,7 +8,9 @@
 #' @param sigma boolean with default \code{FALSE} indicating whether or not
 #' \code{x} is a variance/covariance matrix.
 #' @return Returns a vector of estimated reliability coefficient,
-#' currently including alpha and omega.
+#' currently including alpha and omega. Coefficients can also be obtained
+#' individually with \code{alpha} and \code{omega}.
+#' @export
 relanaly <- function(x, sigma = FALSE) {
 
   x <- as.matrix(x)

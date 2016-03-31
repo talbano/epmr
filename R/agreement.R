@@ -7,6 +7,7 @@
 #' matrix of scores with two columns, one per rater.
 #' @param lev vector of all unique possible scores.
 #' @return Returns a list of agreement indices.
+#' @export
 agranaly <- function(x, y, lev = unique(unlist(x))) {
 
   if(!missing(y))

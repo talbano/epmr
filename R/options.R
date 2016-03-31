@@ -20,6 +20,7 @@
 #' @param sep character string used to separate output in written file.
 #' @return Returns a list of distractor analysis tables, one per item. Each
 #' table contains the distribution of unscored item responses by group.
+#' @export
 optanaly <- function(x, groups, scores, cuts = c(0, 1/3, 2/3, 1), key,
   labels = c("lower", "middle", "upper"),
   itemid = colnames(x), filename, sep = ",") {
