@@ -32,8 +32,8 @@ itemanaly <- function(x, subset = 1:ncol(x), scores) {
 
 	out <- list(items = data.frame(m = p, sd = s, n = np,
   	na = nna, pb, cpb, aid),
-  	scale = danl(total, na.rm = TRUE),
-  	reliability = tryCatch(ranl(x), error = function(x) x))
+  	scale = desanaly(total, na.rm = TRUE),
+  	reliability = tryCatch(relanaly(x), error = function(x) x))
   if(!missing(scores))
     out$items$pb2 <- apply(x, 2, function(x)
       cor(x, scores, use = "c"))
