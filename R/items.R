@@ -1,4 +1,4 @@
-#' Classical Item Analysis
+#' Classical Item Analyses
 #'
 #' Functions for estimating classical item analysis indices, including
 #' item difficulty (means and standard deviations by item),
@@ -14,7 +14,7 @@
 #' data.frame of item analysis output, \code{scale} containing descriptives
 #' for the full scale, and \code{reliability} containing a vector of
 #' internal consistency reliability estimates.
-iana <- function(x, subset = 1:ncol(x), scores) {
+itemanaly <- function(x, subset = 1:ncol(x), scores) {
 
   x <- as.matrix(x[, subset])
   p <- apply(x, 2, mean, na.rm = TRUE)
@@ -29,13 +29,10 @@ iana <- function(x, subset = 1:ncol(x), scores) {
   aid <- sapply(1:ncol(x), function(i)
 		tryCatch(alpha(x[, -i]), error = function(y) y))
 
-  rel <- list(alpha = tryCatch(alpha(x), error = function(x) x),
-    omega = tryCatch(omega(x), error = function(x) x))
-
 	out <- list(items = data.frame(m = p, sd = s, n = np,
   	na = nna, pb, cpb, aid),
-  	scale = desc(total, na.rm = TRUE),
-  	reliability = rel)
+  	scale = danl(total, na.rm = TRUE),
+  	reliability = tryCatch(ranl(x), error = function(x) x))
   if(!missing(scores))
     out$items$pb2 <- apply(x, 2, function(x)
       cor(x, scores, use = "c"))

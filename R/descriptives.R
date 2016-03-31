@@ -1,4 +1,4 @@
-#' Descriptive Statistics
+#' Descriptive Analyses
 #'
 #' Functions for obtaining descriptive statistics for a vector or matrix
 #' of quantitative variables.
@@ -12,7 +12,7 @@
 #' @return Returns a matrix of descriptive statistics, including the mean,
 #' median, standard deviation, skewness, kurtosis, minimum, maximum,
 #' and number of complete cases (in columns) by variable (in rows).
-desc <- function(x, complete = TRUE, na.rm = FALSE) {
+desanaly <- function(x, complete = TRUE, na.rm = FALSE) {
 
   x <- cbind(x)
   if(complete)
@@ -33,6 +33,7 @@ desc <- function(x, complete = TRUE, na.rm = FALSE) {
   return(out)
 }
 
+#' @rdname desanaly
 kurt <- function (x, na.rm = FALSE) {
 
   mx <- mean(x, na.rm = na.rm)
@@ -40,6 +41,7 @@ kurt <- function (x, na.rm = FALSE) {
   return(sum((x - mx)^4)/(length(x) * sx^4))
 }
 
+#' @rdname desanaly
 skew <- function(x, na.rm = FALSE) {
 
   mx <- mean(x, na.rm = na.rm)

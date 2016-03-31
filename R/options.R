@@ -1,4 +1,4 @@
-#' Distractor Analysis
+#' Distractor Analyses
 #'
 #' Functions for analyzing distributions of unscored item responses by
 #' ability.
@@ -20,18 +20,18 @@
 #' @param sep character string used to separate output in written file.
 #' @return Returns a list of distractor analysis tables, one per item. Each
 #' table contains the distribution of unscored item responses by group.
-dana <- function(x, groups, scores, cuts = c(0, 1/3, 2/3, 1), key,
+optanaly <- function(x, groups, scores, cuts = c(0, 1/3, 2/3, 1), key,
   labels = c("lower", "middle", "upper"),
   itemid = colnames(x), filename, sep = ",") {
 
   ni <- ncol(x)
 
-  if(is.null(itemid))
+  if (is.null(itemid))
     itemid <- paste("Item", 1:ni, sep = "")
 
-  if(missing(groups)) {
-    if(missing(scores)) {
-      if(missing(key))
+  if (missing(groups)) {
+    if (missing(scores)) {
+      if (missing(key))
         stop("Either 'groups', 'scores', or 'key' must be provided")
       else {
         xs <- matrix(ifelse(unlist(x) ==
@@ -45,17 +45,17 @@ dana <- function(x, groups, scores, cuts = c(0, 1/3, 2/3, 1), key,
   }
 
   out <- vector("list", length = ni)
-  for(i in 1:ni) {
+  for (i in 1:ni) {
     out[[i]] <- table(x[, i], groups)
-      if(!missing(key))
+      if (!missing(key))
         rownames(out[[i]])[rownames(out[[i]]) == key[i]] <-
           paste(key[i], "*", sep = "")
   }
   names(out) <- itemid
 
-  if(!missing(filename)) {
+  if (!missing(filename)) {
     tempcon <- file(filename, "a")
-    for(i in itemid) {
+    for (i in itemid) {
       temptab <- cbind(i = rownames(out[[i]]),
         matrix(c(out[[i]]), ncol = ncol(out[[i]])))
         temptab <- rbind(c(i, colnames(out[[i]])), temptab)
@@ -67,9 +67,9 @@ dana <- function(x, groups, scores, cuts = c(0, 1/3, 2/3, 1), key,
   }
 
 	rowpct <- lapply(out, function(x)
-		t(round(apply(x, 1, function(y) y/sum(y)), 2)*100))
+		t(round(apply(x, 1, function(y) y / sum(y)), 2) * 100))
 	colpct <- lapply(out, function(x)
-		round(apply(x, 2, function(y) y/sum(y)), 2)*100)
+		round(apply(x, 2, function(y) y / sum(y)), 2) * 100)
 
 	out <- list(counts = out, rowpct = rowpct,
 		colpct = colpct)

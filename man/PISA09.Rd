@@ -3,7 +3,7 @@
 \docType{data}
 \name{PISA09}
 \alias{PISA09}
-\title{Subset of PISA 2009 Data}
+\title{PISA 2009 Data}
 \format{A data frame with 44506 rows and 73 variables}
 \source{
 \url{https://nces.ed.gov/surveys/pisa/}

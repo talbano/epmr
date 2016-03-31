@@ -1,4 +1,4 @@
-#' Interrater Agreement
+#' Interrater Agreement Analyses
 #'
 #' Functions for estimating agreement in scores from a pair of raters.
 #'
@@ -7,7 +7,7 @@
 #' matrix of scores with two columns, one per rater.
 #' @param lev vector of all unique possible scores.
 #' @return Returns a list of agreement indices.
-agree <- function(x, y, lev = unique(unlist(x))) {
+agranaly <- function(x, y, lev = unique(unlist(x))) {
 
   if(!missing(y))
     x <- as.matrix(data.frame(x, y))
