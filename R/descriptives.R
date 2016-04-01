@@ -17,7 +17,7 @@ desanaly <- function(x, complete = TRUE, na.rm = FALSE) {
 
   x <- cbind(x)
   if(complete)
-    x <- x[complete.cases(x), ]
+    x <- cbind(x[complete.cases(x), ])
   out <- t(apply(x, 2, function(y) c(mean(y, na.rm = na.rm),
     median(y, na.rm = na.rm),
     sd(y, na.rm = na.rm),
