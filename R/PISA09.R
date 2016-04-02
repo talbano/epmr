@@ -39,6 +39,6 @@
 #'  }
 #'}
 #'
-#' @format A data frame with 44506 rows and 73 variables
+#' @format A data frame with 42734 rows and 71 variables
 #' @source \url{https://nces.ed.gov/surveys/pisa/}
 "PISA09"
