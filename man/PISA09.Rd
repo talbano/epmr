@@ -4,7 +4,7 @@
 \name{PISA09}
 \alias{PISA09}
 \title{PISA 2009 Data}
-\format{A data frame with 44506 rows and 73 variables}
+\format{A data frame with 44962 rows and 63 variables}
 \source{
 \url{https://nces.ed.gov/surveys/pisa/}
 }
@@ -45,10 +45,8 @@ Variables include
  }
  \item From the PISA 2009 reading assessment:
  \itemize{
-   \item r412q01 through r453q06: unscored responses for 15 items in reading
-     cluster 6.
-   \item r412q01s through r453q06s: scored responses for 15 items in reading
-     cluster 6.
+   \item r414q02 through r458q04: unscored responses for 11 items.
+   \item r414q02s through r458q04s: scored responses for 11 items.
  }
 }
 }
