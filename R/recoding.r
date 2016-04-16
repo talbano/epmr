@@ -12,17 +12,17 @@
 #' are at least ordinal scale quantitative and observed.
 #' @return Returns a vector of recoded scores.
 #' @export
-recode <- function(x, old, new = names(old), rev = TRUE) {
+recode <- function(x, from, to = names(from), reverse = missing(from)) {
 
-	if(rev) {
-		old <- sort(unique(x))
-		new <- old[order(old, decreasing = TRUE)]
+	if(reverse) {
+		from <- sort(unique(x))
+		to <- from[order(from, decreasing = TRUE)]
 	}
 
-	index <- lapply(old, function(y) x %in% y)
+	index <- lapply(from, function(y) x %in% y)
 
 	for(i in 1:length(index))
-		x[index[[i]]] <- new[i]
+		x[index[[i]]] <- to[i]
 
 	return(x)
 }

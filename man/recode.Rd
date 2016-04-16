@@ -4,7 +4,7 @@
 \alias{recode}
 \title{Recoding Data}
 \usage{
-recode(x, old, new = names(old), rev = TRUE)
+recode(x, from, to = names(from), reverse = missing(from))
 }
 \arguments{
 \item{x}{vector of scores to be recoded}
