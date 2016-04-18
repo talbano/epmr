@@ -4,7 +4,8 @@
 \alias{rsim}
 \title{Simulating Correlated Scores}
 \usage{
-rsim(n, rho, x, meanx = 0, sdx = 1, meany = 0, sdy = 1)
+rsim(n, rho, x, meanx = 0, sdx = 1, meany = 0, sdy = 1,
+  to.data.frame = FALSE)
 }
 \arguments{
 \item{n}{number of observations. If \code{length(n) > 1}, the length
@@ -20,9 +21,13 @@ correlate at \code{rho} with \code{x}.}
 \item{meanx, sdx}{the desired mean and standard deviation of x.}
 
 \item{meany, sdy}{the desired mean and standard deviation of y.}
+
+\item{to.data.frame}{should the results be converted to a \code{data.frame}?
+Defaults to \code{FALSE}.}
 }
 \value{
-Returns a list containing:
+When \code{to.data.frame} is \code{TRUE}, returns a data frame of
+scores on x and y. Otherwise, a list containing:
 \describe{
 \item{x}{\code{x} when supplied, or the simulated vector of scores}
 \item{y}{the vector y sampled from a population correlating with
