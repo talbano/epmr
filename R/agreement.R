@@ -8,7 +8,7 @@
 #' @param lev vector of all unique possible scores.
 #' @return Returns a list of agreement indices.
 #' @export
-agranaly <- function(x, y, lev = unique(unlist(x))) {
+agranaly <- function(x, y, lev = unique(c(x))) {
 
   if(!missing(y))
     x <- as.matrix(data.frame(x, y))
