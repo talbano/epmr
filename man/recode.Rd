@@ -7,17 +7,18 @@
 recode(x, from, to = names(from), reverse = missing(from))
 }
 \arguments{
-\item{x}{vector of scores to be recoded}
+\item{x}{vector of scores to be recoded.}
 
-\item{old}{list of old values in \code{x} which will be recoded according to
-the name of the list element, unless new is specified.}
+\item{from}{list of old values in \code{x} which will be recoded according to
+the name of the list element, unless \code{to} is specified.}
 
-\item{new}{vector of new values to be assigned to corresponding value(s)
-in \code{old}, assuming \code{old} and \code{new} are the same length.}
+\item{to}{vector of new values to be assigned to corresponding value(s)
+in \code{from}, assuming \code{from} and \code{to} are the same length.}
 
-\item{rev}{logical, with default \code{FALSE}. If TRUE, old and new are
-ignored and \code{x} is simply reverse coded. Assumes all possible values
-are at least ordinal scale quantitative and observed.}
+\item{reverse}{logical, with default \code{TRUE} when \code{from} is missing.
+If TRUE, old and new are ignored and \code{x} is simply reverse coded.
+Assumes all possible values are at least ordinal scale quantitative and
+observed.}
 }
 \value{
 Returns a vector of recoded scores.

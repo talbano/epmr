@@ -11,14 +11,15 @@
 #' defaulting to the \code{min}, \code{max}, \code{range}, \code{mean}, or
 #' \code{sd} of \code{y}.
 #' @name rescaling
+#' @return Returns a vector of \code{length(x)} scores, with new parameters.
 NULL
 
 #' @rdname rescaling
 #' @export
 setrange <- function(x, y, to = range(y)) {
 
-  x[x < to[1]] <- to[1]
-  x[x > to[2]] <- to[2]
+  x[x <= to[1]] <- to[1]
+  x[x >= to[2]] <- to[2]
   return(x)
 }
 
@@ -26,7 +27,7 @@ setrange <- function(x, y, to = range(y)) {
 #' @export
 setmin <- function(x, y, to = min(y)) {
 
-  x[x < to[1]] <- to[1]
+  x[x <= to[1]] <- to[1]
   return(x)
 }
 
@@ -34,7 +35,7 @@ setmin <- function(x, y, to = min(y)) {
 #' @export
 setmax <- function(x, y, to = max(y)) {
 
-  x[x > to[1]] <- to[1]
+  x[x >= to[1]] <- to[1]
   return(x)
 }
 

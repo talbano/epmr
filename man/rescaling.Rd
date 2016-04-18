@@ -28,6 +28,9 @@ setsd(x, y, to = sd(y))
 defaulting to the \code{min}, \code{max}, \code{range}, \code{mean}, or
 \code{sd} of \code{y}.}
 }
+\value{
+Returns a vector of \code{length(x)} scores, with new parameters.
+}
 \description{
 \code{setrange} truncates a quantitative variable to have a set minimum
 and maximum. \code{setmin} truncates only to the minimum, and \code{setmax}
