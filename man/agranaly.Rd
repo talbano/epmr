@@ -4,12 +4,17 @@
 \alias{agranaly}
 \title{Interrater Agreement Analyses}
 \usage{
-agranaly(x, y, lev = unique(unlist(x)))
+agranaly(x, y, w, lev)
 }
 \arguments{
 \item{x, y}{vectors of scores from two different raters for the same units
 of observation. Alternatively, if \code{y} is missing, \code{x} can be a
-matrix of scores with two columns, one per rater.}
+matrix of scores with two columns, one per rater, or a crosstab of rater
+scores.}
+
+\item{w}{matrix of weights applied to adjust the severity of disagreements
+in calculating weighted kappa. Be default, cells 1 off from the diagonal
+are weighted 1, 2 off are weighted 2, etc.}
 
 \item{lev}{vector of all unique possible scores.}
 }
