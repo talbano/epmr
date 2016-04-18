@@ -77,12 +77,14 @@ omega <- function(x, sigma = FALSE) {
 }
 
 #' @rdname relanaly
+#' @export
 sbr <- function(r, k) {
 
   return((k * r)/((k - 1) * r + 1))
 }
 
 #' @rdname relanaly
+#' @export
 sem <- function(r, sd) {
 
   return(sd * sqrt(1 - r))
