@@ -27,12 +27,13 @@
 #' @export
 rsim <- function(n, rho, x, meanx = 0, sdx = 1, meany = 0, sdy = 1,
   to.data.frame = FALSE) {
+
   if(missing(x))
     x <- rnorm(n, meanx, sdx)
   else {
     n <- length(x)
-    meanx <- mean(x)
-    sdx <- sd(x)
+    meanx <- mean(x, na.rm = TRUE)
+    sdx <- sd(x, na.rm = TRUE)
   }
 
   y <- (x - meanx) * rho +
