@@ -3,6 +3,7 @@
 export(agranaly)
 export(alpha)
 export(desanaly)
+export(gstudy)
 export(itemanaly)
 export(omega)
 export(optanaly)
