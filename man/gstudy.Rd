@@ -16,7 +16,7 @@ gstudy(x, ...)
 
 \method{gstudy}{data.frame}(x, ...)
 
-\method{gstudy}{merMod}(x, n, id = "person")
+\method{gstudy}{merMod}(x, n, id = "person", ...)
 }
 \arguments{
 \item{x}{for the default method, a \code{formula} object sent to the
@@ -35,8 +35,8 @@ used.}
 defaulting to \code{"person"}.}
 }
 \value{
-Returns a list containing the g and d coefficients, the variance
-components, and n counts by facet.
+Returns a list containing reliabilities, variance components, and
+n counts by facet.
 }
 \description{
 Functions for running generalizability (G) and decision (D) studies
