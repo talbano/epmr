@@ -1,4 +1,4 @@
-#' Interrater Agreement Analyses
+#' Interrater Agreement Study
 #'
 #' Functions for estimating agreement in scores from a pair of raters.
 #'
@@ -12,7 +12,7 @@
 #' @param lev vector of all unique possible scores.
 #' @return Returns a list of agreement indices.
 #' @export
-agranaly <- function(x, y, w, lev) {
+astudy <- function(x, y, w, lev) {
 
   if (!missing(y))
     x <- as.matrix(data.frame(x, y))

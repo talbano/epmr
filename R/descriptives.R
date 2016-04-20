@@ -1,4 +1,4 @@
-#' Descriptive Analyses
+#' Descriptive Study
 #'
 #' Functions for obtaining descriptive statistics for a vector or matrix
 #' of quantitative variables.
@@ -13,7 +13,7 @@
 #' median, standard deviation, skewness, kurtosis, minimum, maximum,
 #' and number of complete cases (in columns) by variable (in rows).
 #' @export
-desanaly <- function(x, complete = TRUE, na.rm = FALSE) {
+dstudy <- function(x, complete = TRUE, na.rm = FALSE) {
 
   x <- cbind(x)
   if(complete)

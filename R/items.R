@@ -1,4 +1,4 @@
-#' Classical Item Analyses
+#' Scored Item Study
 #'
 #' Functions for estimating classical item analysis indices, including
 #' item difficulty (means and standard deviations by item),
@@ -15,7 +15,7 @@
 #' for the full scale, and \code{reliability} containing a vector of
 #' internal consistency reliability estimates.
 #' @export
-itemanaly <- function(x, subset = 1:ncol(x), scores) {
+istudy <- function(x, subset = 1:ncol(x), scores) {
 
   x <- as.matrix(x[, subset])
   p <- apply(x, 2, mean, na.rm = TRUE)
@@ -32,8 +32,8 @@ itemanaly <- function(x, subset = 1:ncol(x), scores) {
 
 	out <- list(items = data.frame(m = p, sd = s, n = np,
   	na = nna, pb, cpb, aid),
-  	scale = desanaly(total, na.rm = TRUE),
-  	reliability = tryCatch(relanaly(x), error = function(x) x))
+  	scale = dstudy(total, na.rm = TRUE),
+  	reliability = tryCatch(rstudy(x), error = function(x) x))
   if(!missing(scores))
     out$items$pb2 <- apply(x, 2, function(x)
       cor(x, scores, use = "c"))

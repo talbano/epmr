@@ -1,7 +1,7 @@
-#' Distractor Analyses
+#' Item Option Study
 #'
 #' Functions for analyzing distributions of unscored item responses by
-#' ability.
+#' ability, also known as distractor analysis.
 #'
 #' @param x matrix or data.frame of unscored item responses.
 #' @param groups optional grouping variable as a vector with length
@@ -21,7 +21,7 @@
 #' @return Returns a list of distractor analysis tables, one per item. Each
 #' table contains the distribution of unscored item responses by group.
 #' @export
-optanaly <- function(x, groups, scores, cuts = c(0, 1/3, 2/3, 1), key,
+ostudy <- function(x, groups, scores, cuts = c(0, 1/3, 2/3, 1), key,
   labels = c("lower", "middle", "upper"),
   itemid = colnames(x), filename, sep = ",") {
 

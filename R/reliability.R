@@ -1,4 +1,4 @@
-#' Internal Consistency Reliability Analyses
+#' Reliability Study
 #'
 #' Functions for estimating internal consistency reliability, adjusting
 #' reliability, and estimating the standard error of measurement.
@@ -18,7 +18,7 @@
 #' reliability coefficient predicted using the Spearman-Brown formula.
 #' \code{sem} returns the standard error of measurement.
 #' @export
-relanaly <- function(x, sigma = FALSE) {
+rstudy <- function(x, sigma = FALSE) {
 
   x <- as.matrix(x)
   ni <- ncol(x)
@@ -40,7 +40,7 @@ relanaly <- function(x, sigma = FALSE) {
   return(out)
 }
 
-#' @rdname relanaly
+#' @rdname rstudy
 #' @export
 alpha <- function(x, sigma = FALSE) {
 
@@ -58,7 +58,7 @@ alpha <- function(x, sigma = FALSE) {
   return((1 - sjj/s2) * ni/(ni - 1))
 }
 
-#' @rdname relanaly
+#' @rdname rstudy
 #' @export
 omega <- function(x, sigma = FALSE) {
 
@@ -76,14 +76,14 @@ omega <- function(x, sigma = FALSE) {
   return(sum(lambda)^2/sum(x))
 }
 
-#' @rdname relanaly
+#' @rdname rstudy
 #' @export
 sbr <- function(r, k) {
 
   return((k * r)/((k - 1) * r + 1))
 }
 
-#' @rdname relanaly
+#' @rdname rstudy
 #' @export
 sem <- function(r, sd) {
 
