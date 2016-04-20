@@ -35,8 +35,8 @@ used.}
 defaulting to \code{"person"}.}
 }
 \value{
-Returns a list containing reliabilities, variance components, and
-n counts by facet.
+Returns a list containing original call, reliabilities,
+variance components, and n counts by facet.
 }
 \description{
 Functions for running generalizability (G) and decision (D) studies

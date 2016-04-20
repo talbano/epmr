@@ -13,8 +13,8 @@
 #' @param id character string naming the id variable for the unit of observation,
 #' defaulting to \code{"person"}.
 #' @param ... further arguments passed to or from other methods.
-#' @return Returns a list containing reliabilities, variance components, and
-#' n counts by facet.
+#' @return Returns a list containing original call, reliabilities,
+#' variance components, and n counts by facet.
 #' @export
 gstudy <- function(x, ...) UseMethod("gstudy")
 
@@ -53,37 +53,71 @@ gstudy.data.frame <- function(x, ...) {
 #' @export
 gstudy.merMod <- function(x, n, id = "person", ...) {
 
+  cl <- match.call()
   vc <- unlist(lme4::VarCorr(x))
   s2 <- attr(lme4::VarCorr(x), "sc")^2
   nf <- length(vc)
-  ns <- summary(x)$ngrps
-  fnames <- names(ns)
-  #if(missing(n)) {
-  	n <- ns[!grepl(":", fnames)]
+  n1 <- n2 <- summary(x)$ngrps
+  fnames <- names(n1)
+  if(missing(n)) {
+  	n <- n1[!grepl(":", fnames)]
   	nnames <- names(n)
-  #}
-  #else {
-  #  nnames <- names(n)
-	#  for(i in nnames)
-  #    for(j in nnames[nnames != i])
-  #      ns[paste(i, j, sep = ":")] <- n[i]*n[j]
-  #  ns[nnames] <- n
-  #  ns <- ns[fnames]
-  #}
+  }
+  else {
+    nnames <- names(n)
+	  for(i in nnames)
+      for(j in nnames[nnames != i])
+        n2[paste(i, j, sep = ":")] <- n[i] * n[j]
+    n2[nnames] <- n
+    n2 <- n2[fnames]
+  }
 
-  ga <- vc[id] / sum(vc[id], vc[fnames != id],
-    s2 / prod(n[nnames != id]))
-  gr <- vc[id] / sum(vc[id], vc[fnames != id &
+  # g is relative and includes only terms interacting with id
+  # d is absolute and includes all terms
+  # One doesn't adjust by n, another does?
+  # Separate out SEM for each
+  n2r <- n2
+  n2r[grepl(id, fnames)] <- n2r[grepl(id, fnames)] / n2r[id]
+  #ga <- vc[id] / sum(vc, s2)
+  #gr <- vc[id] / sum(vc[id], vc[fnames != id &
+  #  grepl(id, names(vc))], s2)
+  gs2 <- sum((vc / n2r)[fnames != id &
     grepl(id, names(vc))], s2 / prod(n[nnames != id]))
-  da <- vc[id] / sum(vc[id], (vc / ns)[fnames != id],
-    s2 / prod(n[nnames != id]))
-  dr <- vc[id] / sum(vc[id], (vc / ns)[fnames != id &
-    grepl(id, names(vc))], s2 / prod(n[nnames != id]))
-  r <- data.frame(absolute = c(ga, da), relative = c(gr, dr),
+  ds2 <- sum((vc / n2r)[fnames != id], s2 / prod(n[nnames != id]))
+  g <- vc[id] / sum(vc[id], gs2)
+  d <- vc[id] / sum(vc[id], ds2)
+  r <- data.frame(r = c(g, d), sem = sqrt(c(gs2, ds2)),
     row.names = c("g", "d"))
 
   vcout <- data.frame("variance" = c(vc, s2))
   rownames(vcout)[nrow(vcout)] <- "residual"
 
-  return(list(r = r, vc = vcout, ns = ns))
+  out <- list(call = cl, lmercall = x@call, r = r, vc = vcout,
+    n = n, n1 = n1, n2 = n2r)
+  class(out) <- "gstudy"
+
+  return(out)
+}
+
+#' @export
+print.gstudy <- function(x, digits = max(3L, getOption("digits") - 3L), ...) {
+
+  cat("\nCall:\n", paste(deparse(x$call), sep = "\n", collapse = "\n"),
+    "\n", sep = "")
+
+  cat("\nModel Formula:\n", paste(deparse(formula(x$lmercall)),
+    sep = "\n", collapse = "\n"), "\n", sep = "")
+
+  cat("\nReliability:\n")
+  print(format(x$r, digits = digits))
+
+  out <- data.frame(variance = round(x$vc, digits),
+    n1 = NA, n2 = NA)
+  out[names(x$n1), "n1"] <- x$n1
+  out[names(x$n2), "n2"] <- x$n2
+  cat("\nVariance components:\n")
+  print(out)
+
+  cat("\nDecision n:\n")
+  print(x$n)
 }
