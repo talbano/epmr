@@ -93,8 +93,9 @@ gstudy.merMod <- function(x, n, id = "person", ...) {
   gn <- vc[id] / sum(vc[id], gne)
   df <- vc[id] / sum(vc[id], dfe)
   dn <- vc[id] / sum(vc[id], dne)
-  r <- data.frame(r = c(gf, gn, df, dn), sem = sqrt(c(gfe, gne, dfe, dne)),
-    row.names = c("gf", "gn", "df", "dn"))
+  r <- data.frame(g = c(gf, gn, df, dn), sem = sqrt(c(gfe, gne, dfe, dne)),
+    row.names = c("Relative Average", "Relative Single", "Absolute Average",
+      "Absolute Single"))
 
   vcout <- data.frame("variance" = c(vc, s2))
   rownames(vcout)[nrow(vcout)] <- "residual"
