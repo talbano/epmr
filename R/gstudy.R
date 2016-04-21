@@ -117,7 +117,7 @@ print.gstudy <- function(x, digits = max(3L, getOption("digits") - 3L), ...) {
     sep = "\n", collapse = "\n"), "\n", sep = "")
 
   cat("\nReliability:\n")
-  print(format(x$r, digits = digits))
+  print(format(x$g, digits = digits))
 
   out <- data.frame(variance = round(x$vc, digits),
     n1 = NA, n2 = NA)
