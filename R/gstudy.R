@@ -13,8 +13,8 @@
 #' @param id character string naming the id variable for the unit of observation,
 #' defaulting to \code{"person"}.
 #' @param ... further arguments passed to or from other methods.
-#' @return Returns a list containing original call, reliabilities,
-#' variance components, and n counts by facet.
+#' @return Returns a list containing the original call, model formula,
+#' reliabilities, variance components, and n counts by facet.
 #' @export
 gstudy <- function(x, ...) UseMethod("gstudy")
 
@@ -78,16 +78,23 @@ gstudy.merMod <- function(x, n, id = "person", ...) {
   # Separate out SEM for each
   n2r <- n2
   n2r[grepl(id, fnames)] <- n2r[grepl(id, fnames)] / n2r[id]
-  #ga <- vc[id] / sum(vc, s2)
   #gr <- vc[id] / sum(vc[id], vc[fnames != id &
   #  grepl(id, names(vc))], s2)
-  gs2 <- sum((vc / n2r)[fnames != id &
+
+  # Error terms
+  gfe <- sum((vc / n2r)[fnames != id &
     grepl(id, names(vc))], s2 / prod(n[nnames != id]))
-  ds2 <- sum((vc / n2r)[fnames != id], s2 / prod(n[nnames != id]))
-  g <- vc[id] / sum(vc[id], gs2)
-  d <- vc[id] / sum(vc[id], ds2)
-  r <- data.frame(r = c(g, d), sem = sqrt(c(gs2, ds2)),
-    row.names = c("g", "d"))
+  gne <- sum(vc[fnames != id & grepl(id, names(vc))], s2)
+  dfe <- sum((vc / n2r)[fnames != id], s2 / prod(n[nnames != id]))
+  dne <- sum(vc[fnames != id], s2)
+
+  # Reliabilities
+  gf <- vc[id] / sum(vc[id], gfe)
+  gn <- vc[id] / sum(vc[id], gne)
+  df <- vc[id] / sum(vc[id], dfe)
+  dn <- vc[id] / sum(vc[id], dne)
+  r <- data.frame(r = c(gf, gn, df, dn), sem = sqrt(c(gfe, gne, dfe, dne)),
+    row.names = c("gf", "gn", "df", "dn"))
 
   vcout <- data.frame("variance" = c(vc, s2))
   rownames(vcout)[nrow(vcout)] <- "residual"
