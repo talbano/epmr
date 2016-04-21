@@ -93,14 +93,14 @@ gstudy.merMod <- function(x, n, id = "person", ...) {
   gn <- vc[id] / sum(vc[id], gne)
   df <- vc[id] / sum(vc[id], dfe)
   dn <- vc[id] / sum(vc[id], dne)
-  r <- data.frame(g = c(gf, gn, df, dn), sem = sqrt(c(gfe, gne, dfe, dne)),
+  g <- data.frame(g = c(gf, gn, df, dn), sem = sqrt(c(gfe, gne, dfe, dne)),
     row.names = c("Relative Average", "Relative Single", "Absolute Average",
       "Absolute Single"))
 
   vcout <- data.frame("variance" = c(vc, s2))
   rownames(vcout)[nrow(vcout)] <- "residual"
 
-  out <- list(call = cl, lmercall = x@call, r = r, vc = vcout,
+  out <- list(call = cl, lmercall = x@call, g = g, vc = vcout,
     n = n, n1 = n1, n2 = n2r)
   class(out) <- "gstudy"
 
