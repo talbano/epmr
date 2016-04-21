@@ -35,9 +35,8 @@ rstudy <- function(x, sigma = FALSE) {
 
   r <- c(alpha = (1 - sjj / s2) * ni / (ni - 1),
     omega = sum(lambda)^2 / sum(x))
-  out <- cbind(r = r, sem = sem(out, sqrt(s2)))
 
-  return(out)
+  return(cbind(r = r, sem = sem(r, sqrt(s2))))
 }
 
 #' @rdname rstudy
