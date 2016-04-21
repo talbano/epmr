@@ -33,9 +33,9 @@ rstudy <- function(x, sigma = FALSE) {
   lambda <- factanal(covmat = x,
     factors = 1)$loadings[1:ni] * sqrt(diag(x))
 
-  out <- c(alpha = (1 - sjj / s2) * ni / (ni - 1),
-  	omega = sum(lambda)^2 / sum(x))
-  out <- rbind(r = out, sem = sem(out, sqrt(s2)))
+  r <- c(alpha = (1 - sjj / s2) * ni / (ni - 1),
+    omega = sum(lambda)^2 / sum(x))
+  out <- cbind(r = r, sem = sem(out, sqrt(s2)))
 
   return(out)
 }
