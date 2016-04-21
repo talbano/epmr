@@ -30,8 +30,14 @@ dstudy <- function(x, complete = TRUE, na.rm = FALSE) {
   rownames(out) <- colnames(x)
   colnames(out) <-
     c("mean", "median", "sd", "skew", "kurt", "min", "max", "n")
-
+  out <- data.frame(out)
+  class(out) <- c("dstudy", "data.frame")
   return(out)
+}
+
+#' @export
+print.dstudy <- function(x, digits = 3, ...) {
+  print.data.frame(x, digits = digits, ...)
 }
 
 kurt <- function (x, na.rm = FALSE) {
