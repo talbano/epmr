@@ -11,16 +11,26 @@
 #' If TRUE, old and new are ignored and \code{x} is simply reverse coded.
 #' Assumes all possible values are at least ordinal scale quantitative and
 #' observed.
+#' @param trynumeric logical with default \code{TRUE}. If \code{TRUE}, an
+#' attempt is made to convert values in \code{to} to \dQuote{\code{numeric}}.
+#' \code{as.numeric(to)} must first succeed without warnings.
 #' @return Returns a vector of recoded scores.
 #' @export
-recode <- function(x, from, to = names(from), reverse = missing(from)) {
+recode <- function(x, from, to = names(from), reverse = missing(from),
+  trynumeric = TRUE) {
 
 	if(reverse) {
 		from <- sort(unique(x))
 		to <- from[order(from, decreasing = TRUE)]
 	}
-
 	index <- lapply(from, function(y) x %in% y)
+	if(trynumeric) {
+	  if(suppressWarnings(all(!is.na(as.numeric(to)))))
+	    to <- as.numeric(to)
+	  else
+	    warning("value(s) in 'to' could not be converted to numeric.")
+	}
+	x <- as.numeric(x)
 
 	for(i in 1:length(index))
 		x[index[[i]]] <- to[i]

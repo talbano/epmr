@@ -4,7 +4,8 @@
 \alias{recode}
 \title{Recoding Data}
 \usage{
-recode(x, from, to = names(from), reverse = missing(from))
+recode(x, from, to = names(from), reverse = missing(from),
+  trynumeric = TRUE)
 }
 \arguments{
 \item{x}{vector of scores to be recoded.}
@@ -19,6 +20,10 @@ in \code{from}, assuming \code{from} and \code{to} are the same length.}
 If TRUE, old and new are ignored and \code{x} is simply reverse coded.
 Assumes all possible values are at least ordinal scale quantitative and
 observed.}
+
+\item{trynumeric}{logical with default \code{TRUE}. If \code{TRUE}, an
+attempt is made to convert values in \code{to} to \dQuote{\code{numeric}}.
+\code{as.numeric(to)} must first succeed without warnings.}
 }
 \value{
 Returns a vector of recoded scores.
