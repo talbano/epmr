@@ -10,7 +10,7 @@
 #' @param subset optional vector for selecting a subset of columns from \code{x}.
 #' @param scores optional vector of construct scores used to calculate
 #' item discrimination.
-#' @return Returns a list with three elements: \code{item} contianing a
+#' @return Returns a list with three elements: \code{item} containing a
 #' data.frame of item analysis output, \code{scale} containing descriptives
 #' for the full scale, and \code{reliability} containing a vector of
 #' internal consistency reliability estimates.
@@ -18,25 +18,32 @@
 istudy <- function(x, subset = 1:ncol(x), scores) {
 
   x <- as.matrix(x[, subset])
-  p <- apply(x, 2, mean, na.rm = TRUE)
-  np <- apply(x, 2, function(x) sum(!is.na(x)))
-  nna <- apply(x, 2, function(x) sum(is.na(x)))
-	s <- apply(x, 2, sd, na.rm = TRUE)
-  total <- apply(x, 1, sum, na.rm = TRUE)
-  pb <- apply(x, 2, function(x)
-  	cor(x, total, use = "c"))
-  cpb <- apply(x, 2, function(x)
-  	cor(x, total - x, use = "c"))
-  aid <- sapply(1:ncol(x), function(i)
+  items <- data.frame(m = colMeans(x, na.rm = TRUE),
+    sd = apply(x, 2, sd, na.rm = TRUE),
+    n = apply(x, 2, sumcomp),
+    na = apply(x, 2, summiss))
+  total <- rowSums(x, na.rm = TRUE)
+  items$rit <- apply(x, 2, function(y)
+  	cor(y, total, use = "c"))
+  items$ritc <- apply(x, 2, function(y)
+  	cor(y, total - y, use = "c"))
+  if(!missing(scores))
+    items$rit2 <- apply(x, 2, function(y)
+      cor(y, scores, use = "c"))
+  items$aid <- sapply(1:ncol(x), function(i)
 		tryCatch(alpha(x[, -i]), error = function(y) y))
 
-	out <- list(items = data.frame(m = p, sd = s, n = np,
-  	na = nna, pb, cpb, aid),
-  	scale = dstudy(total, na.rm = TRUE),
-  	reliability = tryCatch(rstudy(x), error = function(x) x))
-  if(!missing(scores))
-    out$items$pb2 <- apply(x, 2, function(x)
-      cor(x, scores, use = "c"))
+	out <- list(items = items, alpha = tryCatch(alpha(x),
+	  error = function(e) e))
+	class(out) <- c("istudy", "list")
 
   return(out)
+}
+
+#' @export
+print.istudy <- function(x, digits = 3, ...) {
+  cat("\nScored Item Study\n\n")
+  cat("Alpha:", round(x$alpha, 4), "\n\n")
+  cat("Item statistics:\n")
+  print.data.frame(x$items, digits = digits, ...)
 }
