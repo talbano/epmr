@@ -2,9 +2,21 @@
 % Please edit documentation in R/dstudy.R
 \name{dstudy}
 \alias{dstudy}
+\alias{kurt}
+\alias{skew}
+\alias{sumcomp}
+\alias{summiss}
 \title{Descriptive Study}
 \usage{
 dstudy(x, complete = TRUE, na.rm = FALSE)
+
+kurt(x, na.rm = FALSE)
+
+skew(x, na.rm = FALSE)
+
+summiss(x)
+
+sumcomp(x)
 }
 \arguments{
 \item{x}{vector, matrix, or data.frame of scores with one column
@@ -17,9 +29,11 @@ per variable.}
 should be removed before calculating individual descriptives.}
 }
 \value{
-Returns a matrix of descriptive statistics, including the mean,
-median, standard deviation, skewness, kurtosis, minimum, maximum,
-and number of complete cases (in columns) by variable (in rows).
+\code{dstudy} returns a data frame of descriptive statistics, including
+the mean, median, standard deviation, skewness, kurtosis, minimum, maximum,
+number of complete cases, and number of NAs (in columns), by variable
+(in rows). \code{kurt} and \code{skew} return the kurtosis and skewness.
+\code{summiss} and \code{sumcomp} count missings and complete cases.
 }
 \description{
 Functions for obtaining descriptive statistics for a vector or matrix
