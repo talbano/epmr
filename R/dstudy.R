@@ -9,9 +9,12 @@
 #' \code{x} should be reduced to rows with complete data across all columns.
 #' @param na.rm logical with default \code{FALSE} specifying whether missings
 #' should be removed before calculating individual descriptives.
-#' @return Returns a matrix of descriptive statistics, including the mean,
-#' median, standard deviation, skewness, kurtosis, minimum, maximum,
-#' and number of complete cases (in columns) by variable (in rows).
+#' @return \code{dstudy} returns a data frame of descriptive statistics, including
+#' the mean, median, standard deviation, skewness, kurtosis, minimum, maximum,
+#' number of complete cases, and number of NAs (in columns), by variable
+#' (in rows). \code{kurt} and \code{skew} return the kurtosis and skewness.
+#' \code{summiss} and \code{sumcomp} count missings and complete cases.
+#'
 #' @export
 dstudy <- function(x, complete = TRUE, na.rm = FALSE) {
 
@@ -25,11 +28,12 @@ dstudy <- function(x, complete = TRUE, na.rm = FALSE) {
     kurt(y, na.rm = na.rm),
     min(y, na.rm = na.rm),
     max(y, na.rm = na.rm),
-    sum(complete.cases(y)))))
+    sumcomp(y),
+    summiss(y))))
 
   rownames(out) <- colnames(x)
   colnames(out) <-
-    c("mean", "median", "sd", "skew", "kurt", "min", "max", "n")
+    c("mean", "median", "sd", "skew", "kurt", "min", "max", "n", "na")
   out <- data.frame(out)
   class(out) <- c("dstudy", "data.frame")
   return(out)
@@ -40,6 +44,8 @@ print.dstudy <- function(x, digits = 3, ...) {
   print.data.frame(x, digits = digits, ...)
 }
 
+#' @rdname dstudy
+#' @export
 kurt <- function (x, na.rm = FALSE) {
 
   mx <- mean(x, na.rm = na.rm)
@@ -47,9 +53,19 @@ kurt <- function (x, na.rm = FALSE) {
   return(sum((x - mx)^4)/(length(x) * sx^4))
 }
 
+#' @rdname dstudy
+#' @export
 skew <- function(x, na.rm = FALSE) {
 
   mx <- mean(x, na.rm = na.rm)
   sx <- sd(x, na.rm = na.rm)
   return(sum((x - mx)^3)/(length(x) * sx^3))
 }
+
+#' @rdname dstudy
+#' @export
+summiss <- function(x) sum(is.na(x))
+
+#' @rdname dstudy
+#' @export
+sumcomp <- function(x) sum(complete.cases(x))
