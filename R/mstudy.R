@@ -7,6 +7,10 @@
 #' @param x matrix or data.frame of scored item responses.
 #' @param subset optional vector for selecting a subset of columns from \code{x}.
 #' @param scores optional vector of construct scores.
+#' @param complete logical with default \code{TRUE} indicating whether or not
+#' \code{x} should be reduced to rows with complete data across all columns.
+#' @param na.rm logical with default \code{FALSE} specifying whether missings
+#' should be removed before calculating individual descriptives.
 #' @return Returns a list with elements pertaining to each study, including:
 #' \code{descriptives}, \code{items}, \code{reliability}, and \code{irt}.
 #' @export

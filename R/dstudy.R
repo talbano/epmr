@@ -41,6 +41,7 @@ dstudy <- function(x, complete = TRUE, na.rm = FALSE) {
 
 #' @export
 print.dstudy <- function(x, digits = 3, ...) {
+  cat("\nDescriptive Study\n\n")
   print.data.frame(x, digits = digits, ...)
 }
 

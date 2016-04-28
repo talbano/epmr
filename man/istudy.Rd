@@ -15,7 +15,7 @@ istudy(x, subset = 1:ncol(x), scores)
 item discrimination.}
 }
 \value{
-Returns a list with three elements: \code{item} contianing a
+Returns a list with three elements: \code{item} containing a
 data.frame of item analysis output, \code{scale} containing descriptives
 for the full scale, and \code{reliability} containing a vector of
 internal consistency reliability estimates.
