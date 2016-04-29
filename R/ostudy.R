@@ -18,11 +18,14 @@
 #' \code{x}, if present, otherwise "Item1", "Item2", etc.
 #' @param filename optional path to file where output will be written.
 #' @param sep character string used to separate output in written file.
-#' @return Returns a list of distractor analysis tables, one per item. Each
-#' table contains the distribution of unscored item responses by group.
+#' @return Returns three lists of distractor analysis tables, one per item,
+#' all stored within a larger list. These lists are \code{counts} for raw
+#' frequencies, \code{rowpct} for percentages by row, and \code{colpct} for
+#' percentages by column. Each table within each of these lists contains the
+#' distribution of unscored item responses by group.
 #' @export
 ostudy <- function(x, groups, scores, cuts = c(0, 1/3, 2/3, 1), key,
-  labels = c("lower", "middle", "upper"),
+  labels = c("low", "mid", "high"),
   itemid = colnames(x), filename, sep = ",") {
 
   ni <- ncol(x)
@@ -43,7 +46,7 @@ ostudy <- function(x, groups, scores, cuts = c(0, 1/3, 2/3, 1), key,
     }
     cc <- complete.cases(cbind(x, scores))
     if(!all(cc)) {
-      warning(sum(cc), " cases with missing data removed.")
+      warning(sum(!cc), " cases with missing data removed.")
       x <- x[cc, ]
       scores <- scores[cc]
     }
