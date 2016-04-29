@@ -35,22 +35,29 @@ ostudy <- function(x, groups, scores, cuts = c(0, 1/3, 2/3, 1), key,
       if (missing(key))
         stop("Either 'groups', 'scores', or 'key' must be provided")
       else {
+        x <- x[complete.cases(x), ]
         xs <- matrix(ifelse(unlist(x) ==
           rep(key, each = nrow(x)), 1, 0), ncol = ni)
-            scores <- apply(xs, 1, sum)
+        scores <- apply(xs, 1, sum)
       }
     }
+    cc <- complete.cases(cbind(x, scores))
+    if(!all(cc)) {
+      warning(sum(cc), " cases with missing data removed.")
+      x <- x[cc, ]
+      scores <- scores[cc]
+    }
     cuts <- quantile(scores, cuts)
-      groups <- cut(scores, cuts, include.lowest = TRUE,
-        labels = labels)
+    groups <- cut(scores, cuts, include.lowest = TRUE,
+      labels = labels)
   }
 
   out <- vector("list", length = ni)
   for (i in 1:ni) {
     out[[i]] <- table(x[, i], groups)
-      if (!missing(key))
-        rownames(out[[i]])[rownames(out[[i]]) == key[i]] <-
-          paste(key[i], "*", sep = "")
+    if (!missing(key))
+      rownames(out[[i]])[rownames(out[[i]]) == key[i]] <-
+        paste(key[i], "*", sep = "")
   }
   names(out) <- itemid
 
