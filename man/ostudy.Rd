@@ -4,8 +4,8 @@
 \alias{ostudy}
 \title{Item Option Study}
 \usage{
-ostudy(x, groups, scores, cuts = c(0, 1/3, 2/3, 1), key, labels = c("lower",
-  "middle", "upper"), itemid = colnames(x), filename, sep = ",")
+ostudy(x, groups, scores, cuts = c(0, 1/3, 2/3, 1), key, labels = c("low",
+  "mid", "high"), itemid = colnames(x), filename, sep = ",")
 }
 \arguments{
 \item{x}{matrix or data.frame of unscored item responses.}
@@ -33,8 +33,11 @@ by first scoring item responses in \code{x}.}
 \item{sep}{character string used to separate output in written file.}
 }
 \value{
-Returns a list of distractor analysis tables, one per item. Each
-table contains the distribution of unscored item responses by group.
+Returns three lists of distractor analysis tables, one per item,
+all stored within a larger list. These lists are \code{counts} for raw
+frequencies, \code{rowpct} for percentages by row, and \code{colpct} for
+percentages by column. Each table within each of these lists contains the
+distribution of unscored item responses by group.
 }
 \description{
 Functions for analyzing distributions of unscored item responses by

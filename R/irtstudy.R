@@ -7,8 +7,11 @@
 #' one column per item.
 #' @param complete logical with default \code{FALSE} indicating whether or not
 #' \code{x} should be reduced to rows with complete data across all columns.
+#' @param ip vector or matrix of item parameters, with a in the first column, b
+#' in the second, and c in the third.
+#' @param theta vector of thetas over which to estimate the corresponding function.
 #' @param ... further arguments passed to or from other functions, including
-#' \code{\link{lme4::glmer}}
+#' \code{\link{glmer}}
 #' @export
 irtstudy <- function(x, complete = FALSE, ...) {
 
@@ -62,18 +65,18 @@ print.irtstudy <- function(x, ...) {
 # Item response function
 #' @rdname irtstudy
 #' @export
-rirf <- function(x, theta = seq(-4, 4, length = 100)){
+rirf <- function(ip, theta = seq(-4, 4, length = 100)){
 
-  if(NCOL(x) == 1)
-    x <- cbind(1, x, 0)
-  else if(NCOL(x) == 2)
-    x <- cbind(x, 0)
-  if(NCOL(x) != 3)
-    stop("'x' can only contain up to three parameters per item.")
-  ni <- NROW(x)
-  out <- sapply(1:ni, function(i) x[i, 3] + (1 - x[i, 3]) /
-      (1 + exp(x[i, 1] * (-theta + x[i, 2]))))
-  colnames(out) <- rownames(x)
+  if(NCOL(ip) == 1)
+    ip <- cbind(1, ip, 0)
+  else if(NCOL(ip) == 2)
+    ip <- cbind(ip, 0)
+  if(NCOL(ip) != 3)
+    stop("'ip' can only contain up to three parameters per item.")
+  ni <- NROW(ip)
+  out <- sapply(1:ni, function(i) ip[i, 3] + (1 - ip[i, 3]) /
+      (1 + exp(ip[i, 1] * (-theta + ip[i, 2]))))
+  colnames(out) <- rownames(ip)
   out <- data.frame(theta = theta, out)
   return(out)
 }
@@ -81,20 +84,20 @@ rirf <- function(x, theta = seq(-4, 4, length = 100)){
 # Item information function
 #' @rdname irtstudy
 #' @export
-riif <- function(x, theta = seq(-4, 4, length = 100)){
+riif <- function(ip, theta = seq(-4, 4, length = 100)){
 
-  out <- rirf(x, theta)
+  out <- rirf(ip, theta)
   out <- data.frame(theta = theta, out[, -1] * (1 - out[, -1]))
-  colnames(out)[-1] <- rownames(x)
+  colnames(out)[-1] <- rownames(ip)
   return(out)
 }
 
 # Item error function
 #' @rdname irtstudy
 #' @export
-rief <- function(x, theta = seq(-4, 4, length = 100)){
+rief <- function(ip, theta = seq(-4, 4, length = 100)){
 
-  out <- riif(x, theta)
+  out <- riif(ip, theta)
   out$se <- 1 / sqrt(out$pq)
   return(out)
 }
@@ -102,29 +105,29 @@ rief <- function(x, theta = seq(-4, 4, length = 100)){
 # Test response function
 #' @rdname irtstudy
 #' @export
-rtrf <- function(x, theta = seq(-4, 4, length = 100)){
+rtrf <- function(ip, theta = seq(-4, 4, length = 100)){
 
   out <- data.frame(theta = theta)
-  out$p <- apply(rbind(rirf(x, theta)$p), 1, sum)
+  out$p <- apply(rbind(rirf(ip, theta)$p), 1, sum)
   return(out)
 }
 
 # Test information function
 #' @rdname irtstudy
 #' @export
-rtif <- function(x, theta = seq(-4, 4, length = 100)){
+rtif <- function(ip, theta = seq(-4, 4, length = 100)){
 
   out <- data.frame(theta = theta,
-    i = apply(riif(x, theta)[, -1], 1, sum))
+    i = apply(riif(ip, theta)[, -1], 1, sum))
   return(out)
 }
 
 # Test error function
 #' @rdname irtstudy
 #' @export
-rtef <- function(x, theta = seq(-4, 4, length = 100)){
+rtef <- function(ip, theta = seq(-4, 4, length = 100)){
 
   out <- data.frame(theta = theta,
-    se = 1 / sqrt(rtif(x, theta)$i))
+    se = 1 / sqrt(rtif(ip, theta)$i))
   return(out)
 }

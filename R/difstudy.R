@@ -10,8 +10,16 @@
 #' \code{x} should be reduced to rows with complete data across all columns.
 #' @param na.rm logical with default \code{FALSE} specifying whether missings
 #' should be removed before calculating individual descriptives.
+#' @param groups optional grouping variable.
 #' @export
 difstudy <- function(x, subset = 1:ncol(x), scores, complete = TRUE,
   na.rm = FALSE) {
+
+
+}
+
+# Dichotomous Mantel-Haenszel DIF
+#' @rdname difstudy
+mhd <- function(x, groups, scores) {
 
 }

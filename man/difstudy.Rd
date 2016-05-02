@@ -2,9 +2,12 @@
 % Please edit documentation in R/difstudy.R
 \name{difstudy}
 \alias{difstudy}
+\alias{mhd}
 \title{Differential Item Functioning Study}
 \usage{
 difstudy(x, subset = 1:ncol(x), scores, complete = TRUE, na.rm = FALSE)
+
+mhd(x, groups, scores)
 }
 \arguments{
 \item{x}{matrix or data.frame of scored item responses.}
@@ -18,6 +21,8 @@ difstudy(x, subset = 1:ncol(x), scores, complete = TRUE, na.rm = FALSE)
 
 \item{na.rm}{logical with default \code{FALSE} specifying whether missings
 should be removed before calculating individual descriptives.}
+
+\item{groups}{optional grouping variable.}
 }
 \description{
 Functions for estimating differential item functioning with a set of

@@ -110,12 +110,11 @@ gstudy.merMod <- function(x, n, id = "person", ...) {
 #' @export
 print.gstudy <- function(x, digits = max(3L, getOption("digits") - 3L), ...) {
 
+  cat("\nGeneralizability Study\n\n")
   cat("\nCall:\n", paste(deparse(x$call), sep = "\n", collapse = "\n"),
     "\n", sep = "")
-
   cat("\nModel Formula:\n", paste(deparse(formula(x$lmercall)),
     sep = "\n", collapse = "\n"), "\n", sep = "")
-
   cat("\nReliability:\n")
   print(format(x$g, digits = digits))
 
