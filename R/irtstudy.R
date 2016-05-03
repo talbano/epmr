@@ -74,8 +74,8 @@ rirf <- function(ip, theta = seq(-4, 4, length = 100)){
   if(NCOL(ip) != 3)
     stop("'ip' can only contain up to three parameters per item.")
   ni <- NROW(ip)
-  out <- sapply(1:ni, function(i) ip[i, 3] + (1 - ip[i, 3]) /
-      (1 + exp(ip[i, 1] * (-theta + ip[i, 2]))))
+  out <- rbind(sapply(1:ni, function(i) ip[i, 3] + (1 - ip[i, 3]) /
+      (1 + exp(ip[i, 1] * (-theta + ip[i, 2])))))
   colnames(out) <- rownames(ip)
   out <- data.frame(theta = theta, out)
   return(out)
@@ -97,8 +97,8 @@ riif <- function(ip, theta = seq(-4, 4, length = 100)){
 #' @export
 rief <- function(ip, theta = seq(-4, 4, length = 100)){
 
-  out <- riif(ip, theta)
-  out$se <- 1 / sqrt(out$pq)
+  out <- data.frame(theta = theta, 1 / sqrt(riif(ip, theta)[, -1]))
+  colnames(out)[-1] <- rownames(ip)
   return(out)
 }
 
@@ -107,8 +107,8 @@ rief <- function(ip, theta = seq(-4, 4, length = 100)){
 #' @export
 rtrf <- function(ip, theta = seq(-4, 4, length = 100)){
 
-  out <- data.frame(theta = theta)
-  out$p <- apply(rbind(rirf(ip, theta)$p), 1, sum)
+  out <- data.frame(theta = theta,
+    p = apply(rirf(ip, theta)[, -1], 1, sum))
   return(out)
 }
 
