@@ -33,7 +33,7 @@ corresponding change in reliability.}
 \item{sd}{the standard deviation of total observed scores.}
 }
 \value{
-Returns a matrix of estimated reliability coefficients,
+Returns a data frame of estimated reliability coefficients,
 currently including alpha and omega, with corresponding standard errors of
 measurement. Reliability coefficients can also be obtained individually
 with \code{alpha} and \code{omega}. \code{sbr} returns a new

@@ -11,7 +11,7 @@
 #' @param k factor by which test length changes, used to predict a
 #' corresponding change in reliability.
 #' @param sd the standard deviation of total observed scores.
-#' @return Returns a matrix of estimated reliability coefficients,
+#' @return Returns a data frame of estimated reliability coefficients,
 #' currently including alpha and omega, with corresponding standard errors of
 #' measurement. Reliability coefficients can also be obtained individually
 #' with \code{alpha} and \code{omega}. \code{sbr} returns a new
@@ -36,7 +36,7 @@ rstudy <- function(x, sigma = FALSE) {
   r <- c(alpha = (1 - sjj / s2) * ni / (ni - 1),
     omega = sum(lambda)^2 / sum(x))
 
-  return(cbind(r = r, sem = sem(r, sqrt(s2))))
+  return(data.frame(r = r, sem = sem(r, sqrt(s2))))
 }
 
 #' @rdname rstudy
