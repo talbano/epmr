@@ -16,27 +16,23 @@
 #' \code{summiss} and \code{sumcomp} count missings and complete cases.
 #'
 #' @export
-dstudy <- function(x, complete = TRUE, na.rm = FALSE) {
-
-  x <- cbind(x)
-  if(complete)
-    x <- cbind(x[complete.cases(x), ])
-  out <- t(apply(x, 2, function(y) c(mean(y, na.rm = na.rm),
-    median(y, na.rm = na.rm),
-    sd(y, na.rm = na.rm),
-    skew(y, na.rm = na.rm),
-    kurt(y, na.rm = na.rm),
-    min(y, na.rm = na.rm),
-    max(y, na.rm = na.rm),
-    sumcomp(y),
-    summiss(y))))
-
-  rownames(out) <- colnames(x)
-  colnames(out) <-
-    c("mean", "median", "sd", "skew", "kurt", "min", "max", "n", "na")
+dstudy <- function(x, complete = TRUE, na.rm = FALSE,...){
+  
+  x <- as.data.frame(x)
+  if (complete) x <- na.omit(x)
+  funs      <- c( mean,   median,   sd,   skew,   kurt,   min,   max, sumcomp, summiss)
+  funs_labs <- c("mean", "median", "sd", "skew", "kurt", "min", "max", "n", "na")
+  
+  out <- array(
+    NA_real_, 
+    dim = c(length(x), length(funs)), 
+    dimnames = list(names(x), funs_labs))
+  out[] <- sapply(funs, function(f) sapply(x, f, na.rm = na.rm))
+  
   out <- data.frame(out)
   class(out) <- c("dstudy", "data.frame")
   return(out)
+  
 }
 
 #' @export
@@ -65,8 +61,8 @@ skew <- function(x, na.rm = FALSE) {
 
 #' @rdname dstudy
 #' @export
-summiss <- function(x) sum(is.na(x))
+summiss <- function(x, ...) sum(is.na(x))
 
 #' @rdname dstudy
 #' @export
-sumcomp <- function(x) sum(complete.cases(x))
+sumcomp <- function(x, ...) sum(complete.cases(x))
