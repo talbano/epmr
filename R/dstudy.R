@@ -51,7 +51,7 @@ kurt <- function (x, na.rm = FALSE) {
 
   mx <- mean(x, na.rm = na.rm)
   sx <- sd(x, na.rm = na.rm)
-  return(sum((x - mx)^4)/(length(x) * sx^4))
+  return(sum((x - mx)^4, na.rm = na.rm)/(length(x) * sx^4))
 }
 
 #' @rdname dstudy
@@ -60,7 +60,7 @@ skew <- function(x, na.rm = FALSE) {
 
   mx <- mean(x, na.rm = na.rm)
   sx <- sd(x, na.rm = na.rm)
-  return(sum((x - mx)^3)/(length(x) * sx^3))
+  return(sum((x - mx)^3, na.rm = na.rm)/(length(x) * sx^3))
 }
 
 #' @rdname dstudy
