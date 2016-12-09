@@ -16,23 +16,20 @@
 #' \code{summiss} and \code{sumcomp} count missings and complete cases.
 #'
 #' @export
-dstudy <- function(x, complete = TRUE, na.rm = FALSE,...){
-  
+dstudy <- function(x, complete = TRUE, na.rm = FALSE, ...){
+
   x <- as.data.frame(x)
   if (complete) x <- na.omit(x)
-  funs      <- c( mean,   median,   sd,   skew,   kurt,   min,   max, sumcomp, summiss)
+  funs <- c(mean, median, sd, skew, kurt, min, max, sumcomp, summiss)
   funs_labs <- c("mean", "median", "sd", "skew", "kurt", "min", "max", "n", "na")
-  
-  out <- array(
-    NA_real_, 
-    dim = c(length(x), length(funs)), 
+
+  out <- array(NA_real_, dim = c(length(x), length(funs)),
     dimnames = list(names(x), funs_labs))
   out[] <- sapply(funs, function(f) sapply(x, f, na.rm = na.rm))
-  
+
   out <- data.frame(out)
   class(out) <- c("dstudy", "data.frame")
   return(out)
-  
 }
 
 #' @export
