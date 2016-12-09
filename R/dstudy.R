@@ -15,6 +15,9 @@
 #' (in rows). \code{kurt} and \code{skew} return the kurtosis and skewness.
 #' \code{summiss} and \code{sumcomp} count missings and complete cases.
 #'
+#' @examples
+#' dstudy(PISA09[, c("elab", "cstrat", "memor")])
+#'
 #' @export
 dstudy <- function(x, complete = TRUE, na.rm = FALSE, ...){
 
@@ -36,6 +39,7 @@ dstudy <- function(x, complete = TRUE, na.rm = FALSE, ...){
 print.dstudy <- function(x, digits = 3, ...) {
   cat("\nDescriptive Study\n\n")
   print.data.frame(x, digits = digits, ...)
+  cat("\n")
 }
 
 #' @rdname dstudy
