@@ -15,7 +15,7 @@
 astudy <- function(x, y, w, lev) {
 
   if (!missing(y))
-    x <- as.matrix(data.frame(x, y))
+    x <- data.frame(x, y)
   if (dim(x)[1] != dim(x)[2]) {
     if (ncol(x) > 2)
       stop("too many variables provided in 'x'")
