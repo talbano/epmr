@@ -28,6 +28,7 @@ ostudy <- function(x, groups, scores, cuts = c(0, 1/3, 2/3, 1), key,
   labels = c("low", "mid", "high"),
   itemid = colnames(x), filename, sep = ",") {
 
+  x <- cbind(x)
   ni <- ncol(x)
 
   if (is.null(itemid))
@@ -47,7 +48,7 @@ ostudy <- function(x, groups, scores, cuts = c(0, 1/3, 2/3, 1), key,
     cc <- complete.cases(cbind(x, scores))
     if(!all(cc)) {
       warning(sum(!cc), " cases with missing data removed.")
-      x <- x[cc, ]
+      x <- cbind(x[cc, ])
       scores <- scores[cc]
     }
     cuts <- quantile(scores, cuts)
