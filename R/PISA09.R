@@ -18,7 +18,7 @@
 #'    \item st27q01 through st27q13: items from the approaches to learning scale,
 #'      which is separated into three subscales: memorization (items st27q01,
 #'      st27q03, st27q05, st27q07), elaboration (items st27q04, st27q08,
-#'      st27q10, st27q12), and control strategies (items st27q02, st27q06
+#'      st27q10, st27q12), and control strategies (items st27q02, st27q06,
 #'      st27q09, st27q11, st27q13).
 #'    \item st33q01 through st33q04: items from the attitude toward school scale.
 #'    \item st41q01 through st41q06: items from the metacognition understanding
