@@ -8,15 +8,15 @@
 \alias{summiss}
 \title{Descriptive Study}
 \usage{
-dstudy(x, complete = TRUE, na.rm = FALSE)
+dstudy(x, complete = TRUE, na.rm = FALSE, ...)
 
 kurt(x, na.rm = FALSE)
 
 skew(x, na.rm = FALSE)
 
-summiss(x)
+summiss(x, ...)
 
-sumcomp(x)
+sumcomp(x, ...)
 }
 \arguments{
 \item{x}{vector, matrix, or data.frame of scores with one column
@@ -38,5 +38,9 @@ number of complete cases, and number of NAs (in columns), by variable
 \description{
 Functions for obtaining descriptive statistics for a vector or matrix
 of quantitative variables.
+}
+\examples{
+dstudy(PISA09[, c("elab", "cstrat", "memor")])
+
 }
 

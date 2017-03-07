@@ -19,7 +19,7 @@
 #' dstudy(PISA09[, c("elab", "cstrat", "memor")])
 #'
 #' @export
-dstudy <- function(x, complete = TRUE, na.rm = FALSE, ...){
+dstudy <- function(x, complete = TRUE, na.rm = FALSE, ...) {
 
   x <- as.data.frame(x)
   if (complete) x <- na.omit(x)
