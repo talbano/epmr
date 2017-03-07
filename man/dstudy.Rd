@@ -27,6 +27,8 @@ per variable.}
 
 \item{na.rm}{logical with default \code{FALSE} specifying whether missings
 should be removed before calculating individual descriptives.}
+
+\item{...}{further arguments passed to or from other functions.}
 }
 \value{
 \code{dstudy} returns a data frame of descriptive statistics, including

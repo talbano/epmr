@@ -12,5 +12,8 @@
 #' Psychological Measurement: in R. Available at
 #' \url{https://github.com/talbano/intro-measurement}
 #' @docType package
+#' @importFrom graphics abline axis lines plot points
+#' @importFrom stats AIC BIC complete.cases cor deviance df.residual
+#' factanal formula logLik median na.omit quantile rnorm sd var
 #' @name epmr
 NULL

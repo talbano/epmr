@@ -9,6 +9,7 @@
 #' \code{x} should be reduced to rows with complete data across all columns.
 #' @param na.rm logical with default \code{FALSE} specifying whether missings
 #' should be removed before calculating individual descriptives.
+#' @param ... further arguments passed to or from other functions.
 #' @return \code{dstudy} returns a data frame of descriptive statistics, including
 #' the mean, median, standard deviation, skewness, kurtosis, minimum, maximum,
 #' number of complete cases, and number of NAs (in columns), by variable
