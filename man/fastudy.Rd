@@ -5,21 +5,36 @@
 \alias{plot.fastudy}
 \title{Factor Analysis Study}
 \usage{
-fastudy(x, factors, complete = TRUE, ...)
+fastudy(x, factors, covmat, complete = TRUE, ...)
 
-\method{plot}{fastudy}(x, ylim = c(1, nrow(x$loadings)), ...)
+\method{plot}{fastudy}(x, ylim = c(1, nrow(x$loadings)), h, ...)
 }
 \arguments{
 \item{x}{matrix or data.frame of scored item responses, one row per person,
 one column per item.}
 
+\item{factors}{the number of factors to extract.}
+
+\item{covmat}{optional covariance matrix. Not used if \code{x} is supplied.}
+
 \item{complete}{logical with default \code{FALSE} indicating whether or not
 \code{x} should be reduced to rows with complete data across all columns.}
 
 \item{...}{further arguments passed to or from other functions.}
+
+\item{ylim}{vector of limits for y-axis in the scree plot, passed to \code{par}.}
+
+\item{h}{y-axis value specifying a horizonal line the scree plot, passed to
+\code{abline}.}
+}
+\value{
+\code{fastudy} runs an exploratory factor analysis using the
+\code{factanal} function, and returns a matrix of factor loadings. The
+print method displays eigenvalues and proportion of variance explained
+per factor.
 }
 \description{
 Functions for examining the dimensionality of a data set via
-exploratory factor analysis.
+exploratory factor analysis. Currently a simple wrapper for factanal.
 }
 
