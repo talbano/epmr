@@ -4,9 +4,10 @@ Version: 0.0.0.9000
 Authors@R: person("Anthony", "Albano", email = "tony.d.albano@gmail.com", role = c("aut", "cre"))
 Description: Contains tools for creating and evaluating educational and
     psychological measures, as used in the book Introduction to Educational and
-    Psychological Measurement. Methods support statistical analysis of item
-    performance, reliability, validity, and dimensionality, within both classical
-    and item response theory frameworks.
+    Psychological Measurement: Using R. Methods support statistical analysis of
+    item performance, reliability, validity, and dimensionality, within both
+    classical and item response theory frameworks. Example data come from the 2009
+    PISA study and the BDI-II.
 Depends:
     R (>= 3.2.3)
 Imports: lme4

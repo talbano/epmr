@@ -13,11 +13,12 @@ Psychological Measurement (Albano, 2016).
 }
 \section{Functions}{
 
-Functions currently support item, distractor, and reliability analyses.
+Functions currently support item, distractor, reliability, and factor
+analyses.
 }
 \references{
 Albano, A. D. (2016) Introduction to Educational and
 Psychological Measurement: in R. Available at
-\url{https://github.com/talbano/intro-measurement}
+\url{https://cehs01.unl.edu/aalbano/intro-measurement-r/}
 }
 
