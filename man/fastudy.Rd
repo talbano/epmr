@@ -7,7 +7,7 @@
 \usage{
 fastudy(x, factors, covmat, complete = TRUE, ...)
 
-\method{plot}{fastudy}(x, ylim = c(1, nrow(x$loadings)), h, ...)
+\method{plot}{fastudy}(x, ylim, h = 1, ...)
 }
 \arguments{
 \item{x}{matrix or data.frame of scored item responses, one row per person,

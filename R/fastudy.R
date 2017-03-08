@@ -32,15 +32,16 @@ fastudy <- function(x, factors, covmat, complete = TRUE, ...) {
 
 #' @rdname fastudy
 #' @export
-plot.fastudy <- function(x, ylim = c(1, nrow(x$loadings)), h, ...) {
+plot.fastudy <- function(x, ylim, h = 1, ...) {
   nf <- ncol(x$loadings)
-  ei <- apply(x$loadings, 2, function(y) sum(y^2))
-  plot(c(1, nf), ylim, type = "n", xaxt = "n", xlab = "Factor",
-    ylab = "Eigenvalue", xlim = c(1 - nf * .1, nf + nf * .1))
+  ei <- colSums(x$loadings^2)
+  if (missing(ylim)) ylim <- c(0, max(ei))
+  plot(c(1 - nf * .1, nf + nf * .1), ylim, type = "n", xaxt = "n",
+    xlab = "Factor", ylab = "Eigenvalue")
   axis(1, at = 1:nf, labels = 1:nf)
   points(1:nf, ei)
   lines(1:nf, ei)
-  if (!missing(h)) abline(h = h)
+  if (!is.null(h)) abline(h = h)
 }
 
 #' @export
