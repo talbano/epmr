@@ -25,12 +25,13 @@ recode <- function(x, from, to = names(from), reverse = missing(from),
 	}
 	index <- lapply(from, function(y) x %in% y)
 	if(trynumeric) {
-	  if(suppressWarnings(all(!is.na(as.numeric(to)))))
+	  if(suppressWarnings(all(!is.na(as.numeric(to))))) {
 	    to <- as.numeric(to)
+	    x <- as.numeric(x)
+	  }
 	  else
 	    warning("value(s) in 'to' could not be converted to numeric.")
 	}
-	x <- as.numeric(x)
 
 	for(i in 1:length(index))
 		x[index[[i]]] <- to[i]
