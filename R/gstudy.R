@@ -6,12 +6,17 @@
 #' @param x for the default method, a \code{formula} object sent to the
 #' \code{\link{lme4}} package. Otherwise, an object of class \code{\link{merMod}},
 #' output by the \code{\link{lmer}} function. \code{x} can also be a data frame,
-#' where a one facet model is assumed with people in rows.
-#' @param data a required data frame containing the variables named in formula.
+#' where a model with a single facet is assumed, with people in rows and the
+#' facet in columns.
+#' @param data a data frame containing the variables named in formula. Required
+#' when x is not a data frame.
 #' @param n vector of counts used in adjusting the g coefficient. Not currently
 #' used.
 #' @param id character string naming the id variable for the unit of observation,
 #' defaulting to \code{"person"}.
+#' @param random logical indicating whether the facet given in columns when
+#' \code{x} is data frame should be treated as a random (default) or fixed
+#' effect.
 #' @param ... further arguments passed to or from other methods.
 #' @return Returns a list containing the original call, model formula,
 #' reliabilities, variance components, and n counts by facet.
@@ -36,17 +41,18 @@ gstudy.formula <- function(x, data = NULL, ...) {
 #' @describeIn gstudy Method for wide data frames with people as rows and a
 #' single facet as columns
 #' @export
-gstudy.data.frame <- function(x, ...) {
+gstudy.data.frame <- function(x, random = TRUE, ...) {
 
   x <- x[complete.cases(x), ]
   nc <- ncol(x)
   nr <- nrow(x)
-  xl <- data.frame(score = unlist(x), person = rep(1:nr, nc),
-    rep(1:nc, each = nr))
-  colnames(xl)[3] <- "rater" # Add support for different name
+  xl <- data.frame(score = unlist(x), person = factor(rep(1:nr, nc)),
+    factor(rep(1:nc, each = nr)))
+  colnames(xl)[3] <- "rater" # Add support for changing label
 
-  gstudy.formula(score ~ 1 + (1 | person) + (1 | rater),
-    data = xl, ...)
+  if (random) f <- formula(score ~ 1 + (1 | person) + (1 | rater))
+  else f <- formula(score ~ 1 + (1 | person) + rater)
+  gstudy.formula(f, data = xl, ...)
 }
 
 #' @describeIn gstudy Method for objects of class \code{\link{merMod}}.

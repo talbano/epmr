@@ -31,4 +31,3 @@ Returns a vector of recoded scores.
 \description{
 Recodes or reverse codes a vector of scores
 }
-

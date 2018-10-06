@@ -37,4 +37,3 @@ per factor.
 Functions for examining the dimensionality of a data set via
 exploratory factor analysis. Currently a simple wrapper for factanal.
 }
-

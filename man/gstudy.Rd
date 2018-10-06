@@ -2,9 +2,9 @@
 % Please edit documentation in R/gstudy.R
 \name{gstudy}
 \alias{gstudy}
-\alias{gstudy.data.frame}
 \alias{gstudy.default}
 \alias{gstudy.formula}
+\alias{gstudy.data.frame}
 \alias{gstudy.merMod}
 \title{Generalizability and Decision Studies}
 \usage{
@@ -14,7 +14,7 @@ gstudy(x, ...)
 
 \method{gstudy}{formula}(x, data = NULL, ...)
 
-\method{gstudy}{data.frame}(x, ...)
+\method{gstudy}{data.frame}(x, random = TRUE, ...)
 
 \method{gstudy}{merMod}(x, n, id = "person", ...)
 }
@@ -22,11 +22,17 @@ gstudy(x, ...)
 \item{x}{for the default method, a \code{formula} object sent to the
 \code{\link{lme4}} package. Otherwise, an object of class \code{\link{merMod}},
 output by the \code{\link{lmer}} function. \code{x} can also be a data frame,
-where a one facet model is assumed with people in rows.}
+where a model with a single facet is assumed, with people in rows and the
+facet in columns.}
 
 \item{...}{further arguments passed to or from other methods.}
 
-\item{data}{a required data frame containing the variables named in formula.}
+\item{data}{a data frame containing the variables named in formula. Required
+when x is not a data frame.}
+
+\item{random}{logical indicating whether the facet given in columns when
+\code{x} is data frame should be treated as a random (default) or fixed
+effect.}
 
 \item{n}{vector of counts used in adjusting the g coefficient. Not currently
 used.}

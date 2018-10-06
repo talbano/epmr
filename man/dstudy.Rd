@@ -4,8 +4,8 @@
 \alias{dstudy}
 \alias{kurt}
 \alias{skew}
-\alias{sumcomp}
 \alias{summiss}
+\alias{sumcomp}
 \title{Descriptive Study}
 \usage{
 dstudy(x, complete = TRUE, na.rm = FALSE, ...)
@@ -45,4 +45,3 @@ of quantitative variables.
 dstudy(PISA09[, c("elab", "cstrat", "memor")])
 
 }
-

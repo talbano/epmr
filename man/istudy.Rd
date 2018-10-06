@@ -27,4 +27,3 @@ item discrimination (item-total and corrected item-total correlations),
 and alpha if item deleted. Descriptive statistics and reliability
 estimates are also returned at the scale level.
 }
-

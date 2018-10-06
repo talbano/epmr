@@ -15,14 +15,14 @@
 #' @export
 irtstudy <- function(x, complete = FALSE, ...) {
 
-  if(!all(unlist(x) %in% c(0, 1, NA)))
+  if (!all(unlist(x) %in% c(0, 1, NA)))
     stop("'x' can only contain score values 0, 1, and NA.")
   ni <- ncol(x)
-  if(complete)
-    x <- x[complete.cases, ]
+  if (complete)
+    x <- x[complete.cases(x), ]
   else {
     allna <- rowSums(is.na(x)) == ni
-    if(any(allna)) {
+    if (any(allna)) {
       x <- x[!allna, ]
       warning(sum(allna), " cases with missing data on all items removed.")
     }
@@ -30,7 +30,7 @@ irtstudy <- function(x, complete = FALSE, ...) {
 
   np <- nrow(x)
   inames <- colnames(x)
-  if(is.null(inames))
+  if (is.null(inames))
     inames <- paste0("item", 1:ni)
   xl <- data.frame(score = c(unlist(x)), person = rep(1:np, ni),
     item = rep(1:ni, each = np), row.names = NULL)
@@ -67,11 +67,11 @@ print.irtstudy <- function(x, ...) {
 #' @export
 rirf <- function(ip, theta = seq(-4, 4, length = 100)){
 
-  if(NCOL(ip) == 1)
+  if (NCOL(ip) == 1)
     ip <- cbind(1, ip, 0)
-  else if(NCOL(ip) == 2)
+  else if (NCOL(ip) == 2)
     ip <- cbind(ip, 0)
-  if(NCOL(ip) != 3)
+  if (NCOL(ip) != 3)
     stop("'ip' can only contain up to three parameters per item.")
   ni <- NROW(ip)
   out <- rbind(sapply(1:ni, function(i) ip[i, 3] + (1 - ip[i, 3]) /

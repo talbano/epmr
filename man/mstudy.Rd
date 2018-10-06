@@ -28,4 +28,3 @@ Functions for running multiple studies on a set of scored item responses,
 including a descriptive study of the total scale scores, and item,
 internal consistency reliability, and item response theory studies.
 }
-

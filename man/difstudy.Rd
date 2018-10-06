@@ -28,4 +28,3 @@ should be removed before calculating individual descriptives.}
 Functions for estimating differential item functioning with a set of
 scored item responses.
 }
-

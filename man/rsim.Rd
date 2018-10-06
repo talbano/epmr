@@ -41,4 +41,3 @@ scores on x and y. Otherwise, a list containing:
 Simulates vectors of scores with specified correlation, means, and
 standard deviations.
 }
-

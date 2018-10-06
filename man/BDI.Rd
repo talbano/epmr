@@ -48,4 +48,3 @@ BDI-II item labels. The full labels, included in BDI$labels, are
 }
 }
 \keyword{datasets}
-

@@ -24,4 +24,3 @@ Returns a list of agreement indices.
 \description{
 Functions for estimating agreement in scores from a pair of raters.
 }
-

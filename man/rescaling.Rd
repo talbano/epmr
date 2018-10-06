@@ -2,10 +2,10 @@
 % Please edit documentation in R/rescaling.R
 \name{rescaling}
 \alias{rescaling}
+\alias{setrange}
+\alias{setmin}
 \alias{setmax}
 \alias{setmean}
-\alias{setmin}
-\alias{setrange}
 \alias{setsd}
 \title{Rescaling Scores}
 \usage{
@@ -37,4 +37,3 @@ and maximum. \code{setmin} truncates only to the minimum, and \code{setmax}
 truncates only to the maximum. \code{setmean} and \code{setsd} set the
 mean and standard deviation.
 }
-

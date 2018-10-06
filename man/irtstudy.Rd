@@ -2,12 +2,12 @@
 % Please edit documentation in R/irtstudy.R
 \name{irtstudy}
 \alias{irtstudy}
-\alias{rief}
-\alias{riif}
 \alias{rirf}
-\alias{rtef}
-\alias{rtif}
+\alias{riif}
+\alias{rief}
 \alias{rtrf}
+\alias{rtif}
+\alias{rtef}
 \title{Item Response Theory Study}
 \usage{
 irtstudy(x, complete = FALSE, ...)
@@ -43,4 +43,3 @@ in the second, and c in the third.}
 Functions for estimating item response theory item and person parameters.
 Currently, only the 1 parameter Rasch model is supported.
 }
-
