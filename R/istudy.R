@@ -31,9 +31,9 @@ istudy <- function(x, subset = 1:ncol(x), scores) {
     items$itc2 <- apply(x, 2, function(y)
       cor(y, scores, use = "c"))
   items$aid <- sapply(1:ncol(x), function(i)
-		tryCatch(alpha(x[, -i]), error = function(y) y))
+		tryCatch(coef_alpha(x[, -i])$alpha, error = function(y) y))
 
-	out <- list(items = items, alpha = tryCatch(alpha(x),
+	out <- list(items = items, alpha = tryCatch(coef_alpha(x)$alpha,
 	  error = function(e) e))
 	class(out) <- c("istudy", "list")
 

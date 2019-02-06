@@ -11,7 +11,7 @@ Description: Contains tools for creating and evaluating educational and
     PISA study and the BDI-II.
 Depends:
     R (>= 3.2.3)
-Imports: lme4
+Imports: lme4, dplyr, ggplot2
 License: GPL-3 + file LICENSE
 LazyData: true
 RoxygenNote: 6.0.1

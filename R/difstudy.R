@@ -24,7 +24,7 @@
 #' rsitems <- paste0(ritems, "s")
 #' x_items <- PISA09[PISA09$cnt == "BEL", rsitems]
 #' x_items <- na.omit(x_items)
-#' groups <- sample(c("m", "f"), nrow(x_items), replace = T)
+#' groups <- sample(c("m", "f"), nrow(x_items), replace = TRUE)
 #' x_totals <- rowSums(x_items, na.rm = TRUE)
 #' difstudy(x = x_items, groups = groups, focal = "f", scores = x_totals)
 #'
@@ -72,7 +72,7 @@ mhd <- function(x, groups, focal, scores) {
   }
   out$delta <- log(out$mh) * -2.35
   out$delta_abs <- abs(out$delta)
-  out$chisq_p <- pchisq(out$chisq, 1, lower = FALSE)
+  out$chisq_p <- pchisq(out$chisq, 1, lower.tail = FALSE)
   out$ets_level <- ""
   out$ets_level[out$delta_abs < 1 | out$chisq_p >= .05] <- "a"
   out$ets_level[out$delta_abs > 1 & out$delta_abs < 1.5 &

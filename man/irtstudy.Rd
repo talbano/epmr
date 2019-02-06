@@ -43,3 +43,13 @@ in the second, and c in the third.}
 Functions for estimating item response theory item and person parameters.
 Currently, only the 1 parameter Rasch model is supported.
 }
+\examples{
+
+ritems <- c("r414q02", "r414q11", "r414q06", "r414q09",
+  "r452q03", "r452q04", "r452q06", "r452q07", "r458q01",
+  "r458q07", "r458q04")
+rsitems <- paste0(ritems, "s")
+pisagbr <- PISA09[PISA09$cnt == "GBR", rsitems]
+irtgbr <- irtstudy(pisagbr)
+
+}

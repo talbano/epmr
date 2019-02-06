@@ -5,26 +5,45 @@
 \alias{mhd}
 \title{Differential Item Functioning Study}
 \usage{
-difstudy(x, subset = 1:ncol(x), scores, complete = TRUE, na.rm = FALSE)
+difstudy(x, groups, focal, scores, subset = 1:ncol(x), complete = TRUE,
+  na.rm = FALSE)
 
-mhd(x, groups, scores)
+mhd(x, groups, focal, scores)
 }
 \arguments{
 \item{x}{matrix or data.frame of scored item responses.}
 
-\item{subset}{optional vector for selecting a subset of columns from \code{x}.}
+\item{groups}{vector defining dichotomous grouping variable.}
 
-\item{scores}{optional vector of construct scores.}
+\item{focal}{string identifying label used in \code{groups}
+to represent the focal group.}
+
+\item{scores}{optional vector of construct scores, defaulting to row sums
+over \code{x} when missing.}
+
+\item{subset}{optional vector for selecting a subset of columns from
+\code{x} that contain scored item responses.}
 
 \item{complete}{logical with default \code{TRUE} indicating whether or not
 \code{x} should be reduced to rows with complete data across all columns.}
 
 \item{na.rm}{logical with default \code{FALSE} specifying whether missings
 should be removed before calculating individual descriptives.}
-
-\item{groups}{optional grouping variable.}
 }
 \description{
 Functions for estimating differential item functioning with a set of
 scored item responses.
+}
+\examples{
+# Calculate total reading scores, as in Chapter 2
+ritems <- c("r414q02", "r414q11", "r414q06", "r414q09",
+  "r452q03", "r452q04", "r452q06", "r452q07", "r458q01",
+  "r458q07", "r458q04")
+rsitems <- paste0(ritems, "s")
+x_items <- PISA09[PISA09$cnt == "BEL", rsitems]
+x_items <- na.omit(x_items)
+groups <- sample(c("m", "f"), nrow(x_items), replace = TRUE)
+x_totals <- rowSums(x_items, na.rm = TRUE)
+difstudy(x = x_items, groups = groups, focal = "f", scores = x_totals)
+
 }

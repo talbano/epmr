@@ -2,19 +2,19 @@
 % Please edit documentation in R/rstudy.R
 \name{rstudy}
 \alias{rstudy}
-\alias{alpha}
-\alias{omega}
-\alias{sbr}
+\alias{coef_alpha}
+\alias{coef_omega}
+\alias{sb_r}
 \alias{sem}
 \title{Reliability Study}
 \usage{
-rstudy(x, sigma = FALSE)
+rstudy(x, n, sigma = FALSE, use = "pairwise", se = FALSE)
 
-alpha(x, sigma = FALSE)
+coef_alpha(x, n, sigma = FALSE, use = "pairwise", se = FALSE)
 
-omega(x, sigma = FALSE)
+coef_omega(x, sigma = FALSE)
 
-sbr(r, k)
+sb_r(r, k)
 
 sem(r, sd)
 }
@@ -22,8 +22,17 @@ sem(r, sd)
 \item{x}{a matrix of scored item responses, or a variance/covariance matrix
 for a set of scored item responses when \code{sigma = TRUE}.}
 
-\item{sigma}{boolean with default \code{FALSE} indicating whether or not
+\item{n}{number of participants, defaulting to number of rows in
+\code{x} when \code{sigma = FALSE}.}
+
+\item{sigma}{logical with default \code{FALSE} indicating whether or not
 \code{x} is a variance/covariance matrix.}
+
+\item{use}{string for specifying how to handle incomplete cases}
+
+\item{se}{logical with default \code{FALSE} for finding analytical
+standard errors and confidence intervals for alpha. Requires that
+\code{x} be a matrix of scored item responses, or \code{n} be provided.}
 
 \item{r}{the reliability.}
 
@@ -36,11 +45,18 @@ corresponding change in reliability.}
 Returns a data frame of estimated reliability coefficients,
 currently including alpha and omega, with corresponding standard errors of
 measurement. Reliability coefficients can also be obtained individually
-with \code{alpha} and \code{omega}. \code{sbr} returns a new
+with \code{coef_alpha} and \code{coef_omega}. \code{sb_r} returns a new
 reliability coefficient predicted using the Spearman-Brown formula.
 \code{sem} returns the standard error of measurement.
 }
 \description{
 Functions for estimating internal consistency reliability, adjusting
 reliability, and estimating the standard error of measurement.
+}
+\examples{
+ritems <- c("r414q02", "r414q11", "r414q06", "r414q09", "r452q03",
+  "r452q04", "r452q06", "r452q07", "r458q01", "r458q07", "r458q04")
+rsitems <- paste0(ritems, "s")
+rstudy(PISA09[PISA09$cnt == "JPN", rsitems], se = TRUE)
+
 }

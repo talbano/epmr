@@ -1,18 +1,16 @@
 #' Item Response Theory Plotting
 #'
 #' Functions for plotting results from item response theory models.
-#' Currently, only the 1 parameter Rasch model is supported.
 #'
+#' @title irtplot
 #' @param x irtstudy output.
 #' @param theta vector of theta values, taken by default from \code{x} in
 #' ip_plot and otherwise defaulting to a sequence of values.
 #' @param b vector of item location parameters, taken by default from
 #' \code{x}.
 #' @param groups vector defining person groups, defaulting to one group.
-#' @param tests vector defining item groups, i.e., tests, defaulting to one.
+#' @param tests vector defining tests, i.e., item groups, defaulting to one.
 #' @param ip data frame of item parameters, taken from \code{x}.
-#' @param ... any number of unnamed arguments, each being output from an
-#' irtstudy, used to plot multiple test functions.
 #' @examples
 #'
 #' ritems <- c("r414q02", "r414q11", "r414q06", "r414q09",
@@ -26,8 +24,12 @@
 #' print(ip_plot(irtgbr))
 #'
 #' # Item response functions
-#' print(irf_plot(x))
-
+#' print(irf_plot(irtgbr))
+#'
+#' # Test response functions
+#' print(tef_plot(irtgbr))
+#'
+#' @rdname irtplot
 #' @export
 ip_plot <- function(x, theta = x$data$theta, b = x$ip$b,
   groups = rep(1, length(theta)), tests = rep(1, length(b))) {
@@ -43,43 +45,32 @@ ip_plot <- function(x, theta = x$data$theta, b = x$ip$b,
     df$source <- gsub("group 1", "person", df$source)
   if (length(unique(tests)) == 1)
     df$source <- gsub("test 1", "item", df$source)
-  out <- ggplot2::ggplot(df, aes(x = theta, fill = source)) +
+  out <- ggplot2::ggplot(df, ggplot2::aes(x = theta, fill = source)) +
     ggplot2::geom_density(alpha = 0.25, size = 0) +
-    theme(legend.title = element_blank())
+    ggplot2::theme(legend.title = ggplot2::element_blank())
   return(out)
 }
 
+#' @rdname irtplot
 #' @export
 irf_plot <- function(x, ip = x$ip, theta = seq(-4, 4, length = 100)) {
   irf <- rirf(ip, theta = theta)[, -1]
   item <- rep(colnames(irf), each = length(theta))
-  df <- dplyr::data_frame(theta = rep(theta, nrow(ip)), p = unlist(irf),
+  p <- unlist(irf)
+  df <- dplyr::data_frame(theta = rep(theta, nrow(ip)), p = p,
     item = item)
-  out <- ggplot2::ggplot(df, aes(x = theta, y = p, color = item)) +
-    geom_line()
+  out <- ggplot2::ggplot(df, ggplot2::aes(x = theta, y = p, color = item)) +
+    ggplot2::geom_line()
   return(out)
 }
 
+#' @rdname irtplot
 #' @export
-tef_plot <- function(..., ip, theta = seq(-4, 4, length = 100)) {
-  dots <- list(...)
-  if (length(dots)) {
-    df <- dplyr::as_data_frame(rtef(ip, theta = theta))
-    out <- ggplot2::ggplot(df, aes(x = theta, y = se)) + geom_line()
-  } else {
-    if (all(unlist(lapply(dots, function(y) "irtstudy" %in% class(y))))) {
-      ip <- lapply(dots, "[[", "ip")
-      # test_names <- unlist(lapply(dots, "[[", "name"))
-    } else {
-      ip <- dots
-      # test_names
-    }
-    tef <- do.call("rbind", lapply(ip, rtef, theta = theta))
-    test_names <- paste("test", seq_along(ip))
-    tef <- data.frame(tef, source = rep(test_names, each = length(theta)))
-    df <- dplyr::as_data_frame(tef)
-    out <- ggplot2::ggplot(df, aes(x = theta, y = se, color = source)) +
-      geom_line()
-  }
+tef_plot <- function(x, ip = x$ip, theta = seq(-4, 4, length = 100)) {
+  df <- dplyr::as_data_frame(rtef(ip, theta = theta))
+  se <- df$se
+  out <- ggplot2::ggplot(df, ggplot2::aes(x = theta, y = se)) +
+    ggplot2::geom_line()
   return(out)
 }
+
