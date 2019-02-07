@@ -62,7 +62,8 @@ print.rstudy <- function(x, digits = 3, ...) {
 
 #' @rdname rstudy
 #' @export
-coef_alpha <- function(x, n, sigma = FALSE, use = "pairwise", se = FALSE) {
+coef_alpha <- function(x, n = NULL, sigma = FALSE, use = "pairwise",
+  se = FALSE) {
 
   x <- as.matrix(x)
   use <- match.arg(use, c("all.obs", "complete.obs", "pairwise.complete.obs",
@@ -80,9 +81,9 @@ coef_alpha <- function(x, n, sigma = FALSE, use = "pairwise", se = FALSE) {
   trx <- sum(diag(x))
   alpha <- (1 - trx/s2) * ni/(ni - 1)
   if (se) {
-    if (missing(n)) {
-      stop("x must be a matrix of scored item responses, or 'n' ",
-        "provided when se = TRUE")
+    if (is.null(n)) {
+      stop("when 'se = TRUE', x must be a matrix of scored item responses, ",
+        "or 'n' must be provided")
     }
     else {
       q <- (2 * ni^2) / ((ni - 1)^2 * s2^3) *
@@ -92,7 +93,7 @@ coef_alpha <- function(x, n, sigma = FALSE, use = "pairwise", se = FALSE) {
     }
   }
   else {
-    q <- se <- ci <- n <- NULL
+    q <- se <- ci <- NULL
   }
   return(list(alpha = alpha, q = q, se = se, ci = ci, sigma = x,
     n = n, ni = ni))
