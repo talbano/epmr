@@ -16,5 +16,6 @@
 #' @importFrom graphics abline axis lines plot points
 #' @importFrom stats AIC BIC complete.cases cor deviance df.residual
 #' factanal formula logLik median na.omit quantile rnorm sd var pchisq
+#' na.omit
 #' @name epmr
 NULL

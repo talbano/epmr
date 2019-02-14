@@ -1,7 +1,9 @@
 #' Factor Analysis Study
 #'
 #' Functions for examining the dimensionality of a data set via
-#' exploratory factor analysis. Currently a simple wrapper for factanal.
+#' exploratory factor analysis. \code{fastudy} is currently a simple
+#' wrapper for factanal. \code{plot.fastudy} generates a scree plot
+#' using \code{fastudy} output.
 #'
 #' @param x matrix or data.frame of scored item responses, one row per person,
 #' one column per item.
@@ -13,6 +15,23 @@
 #' @param ylim vector of limits for y-axis in the scree plot, passed to \code{par}.
 #' @param h y-axis value specifying a horizonal line the scree plot, passed to
 #' \code{abline}.
+#' @examples
+#'
+#' # Exploratory factor analysis of the PISA approaches to learning scale
+#' # Create vector of item names
+#' items <- c("st27q01", "st27q03", "st27q05", "st27q07", "st27q04",
+#'   "st27q08", "st27q10", "st27q12", "st27q02", "st27q06",
+#'   "st27q09", "st27q11", "st27q13")
+#'
+#' # Reduce PISA09 to complete data for Great Britain
+#' pisa_gbr <- na.omit(PISA09[PISA09$cnt == "GBR", items])
+#'
+#' # Fit EFA with six factors
+#' fa_al <- fastudy(pisa_gbr, factors = 6)
+#'
+#' # Scree plot
+#' plot(fa_al, ylim = c(0, 2))
+#'
 #' @return \code{fastudy} runs an exploratory factor analysis using the
 #' \code{factanal} function, and returns a matrix of factor loadings. The
 #' print method displays eigenvalues and proportion of variance explained
@@ -34,14 +53,17 @@ fastudy <- function(x, factors, covmat, complete = TRUE, ...) {
 #' @export
 plot.fastudy <- function(x, ylim, h = 1, ...) {
   nf <- ncol(x$loadings)
-  ei <- colSums(x$loadings^2)
-  if (missing(ylim)) ylim <- c(0, max(ei))
-  plot(c(1 - nf * .1, nf + nf * .1), ylim, type = "n", xaxt = "n",
-    xlab = "Factor", ylab = "Eigenvalue")
-  axis(1, at = 1:nf, labels = 1:nf)
-  points(1:nf, ei)
-  lines(1:nf, ei)
-  if (!is.null(h)) abline(h = h)
+  Eigenvalue <- colSums(x$loadings^2)
+  Factor <- 1:nf
+  eidf <- dplyr::tibble(Eigenvalue = Eigenvalue, Factor = Factor)
+  out <- ggplot2::ggplot(eidf, ggplot2::aes(x = Factor, y = Eigenvalue)) +
+    ggplot2::geom_point() + ggplot2::geom_line() +
+    ggplot2::scale_x_discrete(limits = 1:nf, labels = 1:nf)
+  if (!missing(ylim))
+    out <- out + ggplot2::ylim(ylim)
+  if (!is.null(h))
+    out <- out + ggplot2::geom_abline(slope = 0, intercept = h)
+  return(out)
 }
 
 #' @export

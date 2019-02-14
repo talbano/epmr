@@ -35,5 +35,25 @@ per factor.
 }
 \description{
 Functions for examining the dimensionality of a data set via
-exploratory factor analysis. Currently a simple wrapper for factanal.
+exploratory factor analysis. \code{fastudy} is currently a simple
+wrapper for factanal. \code{plot.fastudy} generates a scree plot
+using \code{fastudy} output.
+}
+\examples{
+
+# Exploratory factor analysis of the PISA approaches to learning scale
+# Create vector of item names
+items <- c("st27q01", "st27q03", "st27q05", "st27q07", "st27q04",
+  "st27q08", "st27q10", "st27q12", "st27q02", "st27q06",
+  "st27q09", "st27q11", "st27q13")
+
+# Reduce PISA09 to complete data for Great Britain
+pisa_gbr <- na.omit(PISA09[PISA09$cnt == "GBR", items])
+
+# Fit EFA with six factors
+fa_al <- fastudy(pisa_gbr, factors = 6)
+
+# Scree plot
+plot(fa_al, ylim = c(0, 2))
+
 }
