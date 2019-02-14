@@ -10,7 +10,7 @@
 \usage{
 rstudy(x, n, sigma = FALSE, use = "pairwise", se = FALSE)
 
-coef_alpha(x, n, sigma = FALSE, use = "pairwise", se = FALSE)
+coef_alpha(x, n = NULL, sigma = FALSE, use = "pairwise", se = FALSE)
 
 coef_omega(x, sigma = FALSE)
 
