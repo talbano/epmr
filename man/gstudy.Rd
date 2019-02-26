@@ -14,7 +14,7 @@ gstudy(x, ...)
 
 \method{gstudy}{formula}(x, data = NULL, ...)
 
-\method{gstudy}{data.frame}(x, random = TRUE, ...)
+\method{gstudy}{data.frame}(x, random = TRUE, column_label = "rater", ...)
 
 \method{gstudy}{merMod}(x, n, id = "person", ...)
 }
@@ -33,6 +33,9 @@ when x is not a data frame.}
 \item{random}{logical indicating whether the facet given in columns when
 \code{x} is data frame should be treated as a random (default) or fixed
 effect.}
+
+\item{column_label}{string for labeling the column facet when \code{x} is
+data frame.}
 
 \item{n}{vector of counts used in adjusting the g coefficient. Not currently
 used.}
@@ -60,3 +63,33 @@ single facet as columns
 \item \code{merMod}: Method for objects of class \code{\link{merMod}}.
 }}
 
+\examples{
+# Reading items
+ritems <- c("r414q02", "r414q11", "r414q06", "r414q09",
+  "r452q03", "r452q04", "r452q06", "r452q07", "r458q01",
+  "r458q07", "r458q04")
+rsitems <- paste0(ritems, "s")
+
+# Subset of PISA09 data for Belgium
+pisa <- subset(PISA09, cnt == "BEL")[, rsitems]
+
+# Convert to long format
+np <- nrow(pisa)
+ni <- ncol(pisa)
+pisal <- data.frame(person = factor(rep(1:np, ni)),
+  item = rep(rsitems, each = np),
+  score = unlist(pisa), row.names = 1:(np * ni))
+
+# Compare coefficient alpha using rstudy and gstudy
+rout <- rstudy(pisa, use = "complete.obs")
+gout <- gstudy(pisa, column_label = "item")
+rout$alpha
+gout$g
+
+# Alternatively, find g using long data and formula method
+# Results differ slightly because missing data are excluded with the
+# data frame method but included by default with the formula method
+goutl <- gstudy(score ~ (1 | person) + (1 | item), data = pisal)
+goutl$g
+
+}

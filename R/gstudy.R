@@ -40,9 +40,9 @@
 #'   item = rep(rsitems, each = np),
 #'   score = unlist(pisa), row.names = 1:(np * ni))
 #'
-#' # Compare coefficient alpha using rstudy and gstudy (see relative average)
+#' # Compare coefficient alpha using rstudy and gstudy
 #' rout <- rstudy(pisa, use = "complete.obs")
-#' gout <- gstudy(pisa, column_label = "item)
+#' gout <- gstudy(pisa, column_label = "item")
 #' rout$alpha
 #' gout$g
 #'
@@ -80,7 +80,7 @@ gstudy.data.frame <- function(x, random = TRUE, column_label = "rater", ...) {
   nr <- nrow(x)
   xl <- data.frame(score = unlist(x), person = factor(rep(1:nr, nc)),
     factor(rep(1:nc, each = nr)))
-  colnames(xl)[3] <- column_facet
+  colnames(xl)[3] <- column_label
 
   if (random)
     f <- formula(sprintf("score ~ 1 + (1 | person) + (1 | %s)",
