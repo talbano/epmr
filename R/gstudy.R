@@ -17,9 +17,41 @@
 #' @param random logical indicating whether the facet given in columns when
 #' \code{x} is data frame should be treated as a random (default) or fixed
 #' effect.
+#' @param column_label string for labeling the column facet when \code{x} is
+#' data frame.
 #' @param ... further arguments passed to or from other methods.
 #' @return Returns a list containing the original call, model formula,
 #' reliabilities, variance components, and n counts by facet.
+#'
+#' @examples
+#' # Reading items
+#' ritems <- c("r414q02", "r414q11", "r414q06", "r414q09",
+#'   "r452q03", "r452q04", "r452q06", "r452q07", "r458q01",
+#'   "r458q07", "r458q04")
+#' rsitems <- paste0(ritems, "s")
+#'
+#' # Subset of PISA09 data for Belgium
+#' pisa <- subset(PISA09, cnt == "BEL")[, rsitems]
+#'
+#' # Convert to long format
+#' np <- nrow(pisa)
+#' ni <- ncol(pisa)
+#' pisal <- data.frame(person = factor(rep(1:np, ni)),
+#'   item = rep(rsitems, each = np),
+#'   score = unlist(pisa), row.names = 1:(np * ni))
+#'
+#' # Compare coefficient alpha using rstudy and gstudy (see relative average)
+#' rout <- rstudy(pisa, use = "complete.obs")
+#' gout <- gstudy(pisa, column_label = "item)
+#' rout$alpha
+#' gout$g
+#'
+#' # Alternatively, find g using long data and formula method
+#' # Results differ slightly because missing data are excluded with the
+#' # data frame method but included by default with the formula method
+#' goutl <- gstudy(score ~ (1 | person) + (1 | item), data = pisal)
+#' goutl$g
+#'
 #' @export
 gstudy <- function(x, ...) UseMethod("gstudy")
 
@@ -41,17 +73,19 @@ gstudy.formula <- function(x, data = NULL, ...) {
 #' @describeIn gstudy Method for wide data frames with people as rows and a
 #' single facet as columns
 #' @export
-gstudy.data.frame <- function(x, random = TRUE, ...) {
+gstudy.data.frame <- function(x, random = TRUE, column_label = "rater", ...) {
 
   x <- x[complete.cases(x), ]
   nc <- ncol(x)
   nr <- nrow(x)
   xl <- data.frame(score = unlist(x), person = factor(rep(1:nr, nc)),
     factor(rep(1:nc, each = nr)))
-  colnames(xl)[3] <- "rater" # Add support for changing label
+  colnames(xl)[3] <- column_facet
 
-  if (random) f <- formula(score ~ 1 + (1 | person) + (1 | rater))
-  else f <- formula(score ~ 1 + (1 | person) + rater)
+  if (random)
+    f <- formula(sprintf("score ~ 1 + (1 | person) + (1 | %s)",
+      column_label))
+  else f <- formula(sprintf("score ~ 1 + (1 | person) + %s", column_label))
   gstudy.formula(f, data = xl, ...)
 }
 
@@ -117,7 +151,7 @@ gstudy.merMod <- function(x, n, id = "person", ...) {
 print.gstudy <- function(x, digits = max(3L, getOption("digits") - 3L), ...) {
 
   cat("\nGeneralizability Study\n\n")
-  cat("\nCall:\n", paste(deparse(x$call), sep = "\n", collapse = "\n"),
+  cat("Call:\n", paste(deparse(x$call), sep = "\n", collapse = "\n"),
     "\n", sep = "")
   cat("\nModel Formula:\n", paste(deparse(formula(x$lmercall)),
     sep = "\n", collapse = "\n"), "\n", sep = "")
