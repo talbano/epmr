@@ -1,10 +1,13 @@
 #' Item Response Theory Study
 #'
 #' Functions for estimating item response theory item and person parameters.
-#' Currently, only the 1 parameter Rasch model is supported.
 #'
 #' @param x matrix or data.frame of scored item responses, one row per person,
 #' one column per item.
+#' @param model integer for the number of paramters to estimate per item. The
+#' default of 1 specifies item intercepts or difficulties via the Rasch model,
+#' 2 additionally specifies item slopes or discriminations, and 3
+#' additionally specifies varying lower asymptotes.
 #' @param complete logical with default \code{FALSE} indicating whether or not
 #' \code{x} should be reduced to rows with complete data across all columns.
 #' @param ip vector or matrix of item parameters, with a in the first column, b
@@ -22,7 +25,7 @@
 #' irtgbr <- irtstudy(pisagbr)
 #'
 #' @export
-irtstudy <- function(x, complete = FALSE, ...) {
+irtstudy <- function(x, model = 1, complete = FALSE, ...) {
 
   if (!all(unlist(x) %in% c(0, 1, NA)))
     stop("'x' can only contain score values 0, 1, and NA.")
@@ -95,9 +98,12 @@ rirf <- function(ip, theta = seq(-4, 4, length = 100)){
 #' @export
 riif <- function(ip, theta = seq(-4, 4, length = 100)){
 
-  out <- rirf(ip, theta)
-  out <- data.frame(theta = theta, out[, -1] * (1 - out[, -1]))
-  colnames(out)[-1] <- rownames(ip)
+  pr <- rirf(ip, theta)[, -1]
+  ia <- ip[, 1]
+  ic <- ip[, 3]
+  qr <- 1 - pr
+  info <- ia^2 * ((pr - ic)^2 / (1 - ic)^2) * (qr / pr)
+  out <- data.frame(theta = theta, info)
   return(out)
 }
 
