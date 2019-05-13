@@ -4,7 +4,7 @@
 \name{BDI}
 \alias{BDI}
 \title{BDI-II Item Correlation and Covariance Matrices}
-\format{A matrix 21 rows and 21 columns}
+\format{A list containing two matrices, each with 21 rows and 21 columns}
 \source{
 Whisman, M. A., Perez, J. E., and Ramel, W. (2000). Factor structure of
 the Beck Depression Inventory - Second Edition (BDI-II) in a student sample.
