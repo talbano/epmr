@@ -146,3 +146,13 @@ rtef <- function(ip, theta = seq(-4, 4, length = 100)){
     se = 1 / sqrt(rtif(ip, theta)$i))
   return(out)
 }
+
+# Simulate dichotomous responses
+#' @rdname irtstudy
+#' @export
+irtsim <- function(ip, theta) {
+  p <- rirf(ip, theta)[, -1]
+  nr <- prod(dim(p))
+  out <- ifelse(p > runif(nr), 1, 0)
+  return(out)
+}

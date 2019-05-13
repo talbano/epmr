@@ -8,9 +8,10 @@
 \alias{rtrf}
 \alias{rtif}
 \alias{rtef}
+\alias{irtsim}
 \title{Item Response Theory Study}
 \usage{
-irtstudy(x, complete = FALSE, ...)
+irtstudy(x, model = 1, complete = FALSE, ...)
 
 rirf(ip, theta = seq(-4, 4, length = 100))
 
@@ -23,10 +24,17 @@ rtrf(ip, theta = seq(-4, 4, length = 100))
 rtif(ip, theta = seq(-4, 4, length = 100))
 
 rtef(ip, theta = seq(-4, 4, length = 100))
+
+irtsim(ip, theta)
 }
 \arguments{
 \item{x}{matrix or data.frame of scored item responses, one row per person,
 one column per item.}
+
+\item{model}{integer for the number of paramters to estimate per item. The
+default of 1 specifies item intercepts or difficulties via the Rasch model,
+2 additionally specifies item slopes or discriminations, and 3
+additionally specifies varying lower asymptotes.}
 
 \item{complete}{logical with default \code{FALSE} indicating whether or not
 \code{x} should be reduced to rows with complete data across all columns.}
@@ -41,7 +49,6 @@ in the second, and c in the third.}
 }
 \description{
 Functions for estimating item response theory item and person parameters.
-Currently, only the 1 parameter Rasch model is supported.
 }
 \examples{
 
