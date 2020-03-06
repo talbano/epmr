@@ -3,7 +3,6 @@
 \docType{package}
 \name{epmr}
 \alias{epmr}
-\alias{epmr-package}
 \title{Tools for Educational and Psychological Measurement}
 \description{
 The epmr package contains tools for creating and evaluating tests in the

@@ -5,8 +5,15 @@
 \alias{mhd}
 \title{Differential Item Functioning Study}
 \usage{
-difstudy(x, groups, focal, scores, subset = 1:ncol(x), complete = TRUE,
-  na.rm = FALSE)
+difstudy(
+  x,
+  groups,
+  focal = groups[1],
+  scores = NULL,
+  subset = 1:ncol(x),
+  complete = TRUE,
+  na.rm = FALSE
+)
 
 mhd(x, groups, focal, scores)
 }
@@ -16,16 +23,17 @@ mhd(x, groups, focal, scores)
 \item{groups}{vector defining dichotomous grouping variable.}
 
 \item{focal}{string identifying label used in \code{groups}
-to represent the focal group.}
+to represent the focal group, defaulting to \code{groups[1]}.}
 
 \item{scores}{optional vector of construct scores, defaulting to row sums
-over \code{x} when missing.}
+over \code{x} when \code{NULL}.}
 
 \item{subset}{optional vector for selecting a subset of columns from
 \code{x} that contain scored item responses.}
 
 \item{complete}{logical with default \code{TRUE} indicating whether or not
-\code{x} should be reduced to rows with complete data across all columns.}
+\code{x}, \code{groups}, and \code{scores} should be reduced to cases
+with complete data.}
 
 \item{na.rm}{logical with default \code{FALSE} specifying whether missings
 should be removed before calculating individual descriptives.}

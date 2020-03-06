@@ -14,7 +14,7 @@ Depends:
 Imports: lme4, dplyr, ggplot2
 License: GPL-3 + file LICENSE
 LazyData: true
-RoxygenNote: 6.0.1
+RoxygenNote: 7.0.2
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr

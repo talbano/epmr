@@ -6,8 +6,14 @@
 \alias{tef_plot}
 \title{irtplot}
 \usage{
-ip_plot(x, theta, b, groups = rep(1, length(theta)), tests = rep(1,
-  length(b)), type = "density")
+ip_plot(
+  x,
+  theta,
+  b,
+  groups = rep(1, length(theta)),
+  tests = rep(1, length(b)),
+  type = "density"
+)
 
 irf_plot(x, ip = x$ip, theta = seq(-4, 4, length = 100))
 

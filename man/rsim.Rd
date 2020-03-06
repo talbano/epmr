@@ -4,8 +4,7 @@
 \alias{rsim}
 \title{Simulating Correlated Scores}
 \usage{
-rsim(n, rho, x, meanx = 0, sdx = 1, meany = 0, sdy = 1,
-  to.data.frame = FALSE)
+rsim(n, rho, x, meanx = 0, sdx = 1, meany = 0, sdy = 1, to.data.frame = FALSE)
 }
 \arguments{
 \item{n}{number of observations. If \code{length(n) > 1}, the length

@@ -6,13 +6,14 @@
 #' @param x matrix or data.frame of scored item responses.
 #' @param groups vector defining dichotomous grouping variable.
 #' @param focal string identifying label used in \code{groups}
-#' to represent the focal group.
+#' to represent the focal group, defaulting to \code{groups[1]}.
 #' @param scores optional vector of construct scores, defaulting to row sums
-#' over \code{x} when missing.
+#' over \code{x} when \code{NULL}.
 #' @param subset optional vector for selecting a subset of columns from
 #' \code{x} that contain scored item responses.
 #' @param complete logical with default \code{TRUE} indicating whether or not
-#' \code{x} should be reduced to rows with complete data across all columns.
+#' \code{x}, \code{groups}, and \code{scores} should be reduced to cases
+#' with complete data.
 #' @param na.rm logical with default \code{FALSE} specifying whether missings
 #' should be removed before calculating individual descriptives.
 #'
@@ -29,12 +30,13 @@
 #' difstudy(x = x_items, groups = groups, focal = "f", scores = x_totals)
 #'
 #' @export
-difstudy <- function(x, groups, focal, scores, subset = 1:ncol(x),
-  complete = TRUE, na.rm = FALSE) {
-  if (complete) xc <- complete.cases(x)
+difstudy <- function(x, groups, focal = groups[1], scores = NULL,
+  subset = 1:ncol(x), complete = TRUE, na.rm = FALSE) {
+  if (complete)
+    xc <- complete.cases(x, groups, scores)
   else xc <- 1:nrow(x)
   x <- x[xc, subset]
-  if (missing(scores))
+  if (is.null(scores))
     scores <- rowSums(x, na.rm = na.rm)
   else scores <- scores[xc]
   groups <- as.character(groups[xc])
@@ -55,20 +57,25 @@ mhd <- function(x, groups, focal, scores) {
   ns <- length(x_scale)
   out <- data.frame(mh = numeric(ni), chisq = numeric(ni))
   for (i in 1:ni) {
-    y <- table(unlist(x[, i]), groups == focal, scores)
-    n_a <- y[2, 1, ] # correct, reference
-    n_b <- y[1, 1, ] # incorrect, reference
-    n_c <- y[2, 2, ] # correct, focal
-    n_d <- y[1, 2, ] # incorrect, focal
-    n_cor <- n_a + n_c
-    n_inc <- n_b + n_d
-    n_ref <- n_a + n_b
-    n_foc <- n_c + n_d
-    n_t <- apply(y, 3, sum)
-    e_a <- n_ref * n_cor / n_t
-    v_a <- (n_ref * n_cor * n_foc * n_inc) / (n_t^2 * (n_t - 1))
-    out$mh[i] <- sum(n_a * n_d / n_t) / sum(n_b * n_c / n_t)
-    out$chisq[i] <- (abs(sum(n_a) - sum(e_a)) - .5)^2 / sum(v_a)
+    xi <- unlist(x[, i])
+    if (sd(xi) == 0)
+      out$mh[i] <- out$chisq[i] <- NA
+    else {
+      y <- table(xi, groups == focal, scores)
+      n_a <- y[2, 1, ] # correct, reference
+      n_b <- y[1, 1, ] # incorrect, reference
+      n_c <- y[2, 2, ] # correct, focal
+      n_d <- y[1, 2, ] # incorrect, focal
+      n_cor <- n_a + n_c
+      n_inc <- n_b + n_d
+      n_ref <- n_a + n_b
+      n_foc <- n_c + n_d
+      n_t <- apply(y, 3, sum)
+      e_a <- n_ref * n_cor / n_t
+      v_a <- (n_ref * n_cor * n_foc * n_inc) / (n_t^2 * (n_t - 1))
+      out$mh[i] <- sum(n_a * n_d / n_t) / sum(n_b * n_c / n_t)
+      out$chisq[i] <- (abs(sum(n_a) - sum(e_a)) - .5)^2 / sum(v_a)
+    }
   }
   out$delta <- log(out$mh) * -2.35
   out$delta_abs <- abs(out$delta)
