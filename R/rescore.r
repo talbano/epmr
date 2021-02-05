@@ -16,7 +16,7 @@
 #' \code{as.numeric(to)} must first succeed without warnings.
 #' @return Returns a vector of recoded scores.
 #' @export
-recode <- function(x, from, to = names(from), reverse = missing(from),
+rescore <- function(x, from, to = names(from), reverse = missing(from),
   trynumeric = TRUE) {
 
 	if(reverse) {

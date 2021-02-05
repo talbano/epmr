@@ -32,6 +32,8 @@
 #' @export
 difstudy <- function(x, groups, focal = groups[1], scores = NULL,
   subset = 1:ncol(x), complete = TRUE, na.rm = FALSE) {
+  if (!all(unlist(x) %in% c(0, 1, NA)))
+    stop("'x' can only contain score values 0, 1, and NA.")
   if (complete)
     xc <- complete.cases(x, groups, scores)
   else xc <- 1:nrow(x)

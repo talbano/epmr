@@ -10,11 +10,11 @@ Description: Contains tools for creating and evaluating educational and
     classical and item response theory frameworks. Example data come from the 2009
     PISA study and the BDI-II.
 Depends:
-    R (>= 3.2.3)
+    R (>= 4.0.0)
 Imports: lme4, dplyr, ggplot2
 License: GPL-3 + file LICENSE
 LazyData: true
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
