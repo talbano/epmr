@@ -1,6 +1,6 @@
 ---
 title: "epmr Package Overview"
-author: "Vignette Author"
+author: "Tony Albano"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
@@ -16,50 +16,30 @@ knitr::opts_chunk$set(
 )
 ```
 
-Vignettes are long form documentation commonly included in packages. Because they are part of the distribution of the package, they need to be as compact as possible. The `html_vignette` output type provides a custom style sheet (and tweaks some options) to ensure that the resulting html is as small as possible. The `html_vignette` format:
+The `epmr` package supports educational and psychological measurement in R, with methods and example data for psychometric analysis of results from standardized tests and assessments. This vignette summarizes the main features of the package. For a thorough demonstration, see the associated book at [https://thetaminusb.com/intro-measurement-r/](https://thetaminusb.com/intro-measurement-r/).
 
-- Never uses retina figures
-- Has a smaller default figure size
-- Uses a custom CSS stylesheet instead of the default Twitter Bootstrap style
+## Overview
 
-## Vignette Info
+The `epmr` package is organized by type of analysis. Here's a list of the main functions, which all have the suffix `study` after an abbreviation of the type of analysis in the first few letters.
 
-Note the various macros within the `vignette` section of the metadata block above. These are required in order to instruct R how to build the vignette. Note that you should change the `title` field and the `\VignetteIndexEntry` to match the title of your vignette.
+* `astudy` is for examining interrater agreement via percentage agreement, kappa, and weighted kappa statistics.  
+* `difstudy` reports differential item functioning results for a set of items.  
+* `dstudy` returns descriptive statistics for one or more variables in a data frame.  
+* `fastudy` is a simple wrapper for exploratory factor analysis with `factanal`.  
+* `gstudy` runs generalizability studies using multilevel modeling with the `lme4` package.  
+* `irtstudy` currently runs the Rasch item reponse theory model using the `lme4` package.  
+* `ostudy` is for option analysis, also called distractor analysis, with unscored, multiple choice item response data.  
+* `rstudy` estimates tau-equivalent and congeneric reliability, also called coefficients alpha and omega, as well as standard error of measurement.  
 
-## Styles
+Helper functions are also provided for  
 
-The `html_vignette` template includes a basic CSS theme. To override this theme you can specify your own CSS in the document metadata as follows:
+* plotting results from item response theory modeling using `ggplot2` with `irtplot`  
+* rescaling variables to have a certain range, mean, and standard deviation with `setmin`, `setmax`, `setmean`, and `setsd`
+* recoding variables with `rescore`, formerly named `recode` which conflicted with the `dplyr` function by the same name.  
 
-    output: 
-      rmarkdown::html_vignette:
-        css: mystyles.css
+## Data
 
-## Figures
+The data in `epmr` come from two studies involving testing data.
 
-The figure sizes have been customised so that you can easily put two images side-by-side. 
-
-```{r, fig.show='hold'}
-plot(1:10)
-plot(10:1)
-```
-
-You can enable figure captions by `fig_caption: yes` in YAML:
-
-    output:
-      rmarkdown::html_vignette:
-        fig_caption: yes
-
-Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
-
-## More Examples
-
-You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
-
-```{r, echo=FALSE, results='asis'}
-knitr::kable(head(mtcars, 10))
-```
-
-Also a quote using `>`:
-
-> "He who gives up [code] safety for [code] speed deserves neither."
-([via](https://twitter.com/hadleywickham/status/504368538874703872))
+* `PISA09` is a data frame containing demographic, cognitive, and noncognitive variables for a subset of students participating in the 2009 administration of the Programme for International Student Assessment (PISA).  
+* `BDI` is a list containing the correlation matrix, covariance matrix, and variable labels for an administration of the Beck Depression Inventory II, as reported in a research study by Whisman, Perez, and Ramel (see the help file for reference).  

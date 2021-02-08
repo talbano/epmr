@@ -12,6 +12,7 @@ Description: Contains tools for creating and evaluating educational and
 Depends:
     R (>= 4.0.0)
 Imports: lme4, dplyr, ggplot2
+Encoding: UTF-8
 License: GPL-3 + file LICENSE
 LazyData: true
 RoxygenNote: 7.1.0
