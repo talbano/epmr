@@ -12,9 +12,9 @@ gstudy(x, ...)
 
 \method{gstudy}{default}(x, data = NULL, ...)
 
-\method{gstudy}{formula}(x, data = NULL, ...)
+\method{gstudy}{formula}(x, data = NULL, id = "person", ...)
 
-\method{gstudy}{data.frame}(x, random = TRUE, column_label = "rater", ...)
+\method{gstudy}{data.frame}(x, random = TRUE, column_label = "rater", id = "person", ...)
 
 \method{gstudy}{merMod}(x, n, id = "person", ...)
 }
@@ -30,6 +30,9 @@ facet in columns.}
 \item{data}{a data frame containing the variables named in formula. Required
 when x is not a data frame.}
 
+\item{id}{character string naming the id variable for the unit of observation,
+defaulting to \code{"person"}.}
+
 \item{random}{logical indicating whether the facet given in columns when
 \code{x} is data frame should be treated as a random (default) or fixed
 effect.}
@@ -39,9 +42,6 @@ data frame.}
 
 \item{n}{vector of counts used in adjusting the g coefficient. Not currently
 used.}
-
-\item{id}{character string naming the id variable for the unit of observation,
-defaulting to \code{"person"}.}
 }
 \value{
 Returns a list containing the original call, model formula,

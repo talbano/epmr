@@ -64,29 +64,30 @@ gstudy.default <- function(x, data = NULL, ...) {
 
 #' @describeIn gstudy Method for formula objects.
 #' @export
-gstudy.formula <- function(x, data = NULL, ...) {
+gstudy.formula <- function(x, data = NULL, id = "person", ...) {
 
   mer <- lme4::lmer(x, data = data, ...)
-  gstudy.merMod(mer)
+  gstudy.merMod(mer, id = id, ...)
 }
 
 #' @describeIn gstudy Method for wide data frames with people as rows and a
 #' single facet as columns
 #' @export
-gstudy.data.frame <- function(x, random = TRUE, column_label = "rater", ...) {
+gstudy.data.frame <- function(x, random = TRUE, column_label = "rater",
+  id = "person", ...) {
 
   x <- x[complete.cases(x), ]
   nc <- ncol(x)
   nr <- nrow(x)
-  xl <- data.frame(score = unlist(x), person = factor(rep(1:nr, nc)),
+  xl <- data.frame(unlist(x), factor(rep(1:nr, nc)),
     factor(rep(1:nc, each = nr)))
-  colnames(xl)[3] <- column_label
+  colnames(xl) <- c("score", id, column_label)
 
   if (random)
-    f <- formula(sprintf("score ~ 1 + (1 | person) + (1 | %s)",
-      column_label))
-  else f <- formula(sprintf("score ~ 1 + (1 | person) + %s", column_label))
-  gstudy.formula(f, data = xl, ...)
+    f <- formula(sprintf("score ~ 1 + (1 | %s) + (1 | %s)",
+      id, column_label))
+  else f <- formula(sprintf("score ~ 1 + (1 | %s) + %s", id, column_label))
+  gstudy.formula(f, data = xl, id = id, ...)
 }
 
 #' @describeIn gstudy Method for objects of class \code{\link{merMod}}.
@@ -114,7 +115,7 @@ gstudy.merMod <- function(x, n, id = "person", ...) {
 
   # g is relative and includes only terms interacting with id
   # d is absolute and includes all terms
-  # One doesn't adjust by n, another does?
+  # One doesn't adjust by n, another does
   # Separate out SEM for each
   n2r <- n2
   n2r[grepl(id, fnames)] <- n2r[grepl(id, fnames)] / n2r[id]
