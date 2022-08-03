@@ -12,10 +12,11 @@ difstudy(
   scores = NULL,
   subset = 1:ncol(x),
   complete = TRUE,
-  na.rm = FALSE
+  na.rm = FALSE,
+  p_cut = 0.05
 )
 
-mhd(x, groups, focal, scores)
+mhd(x, groups, focal, scores, p_cut = 0.05)
 }
 \arguments{
 \item{x}{matrix or data.frame of scored item responses.}
@@ -37,6 +38,8 @@ with complete data.}
 
 \item{na.rm}{logical with default \code{FALSE} specifying whether missings
 should be removed before calculating individual descriptives.}
+
+\item{p_cut}{numeric cutoff for evaluating the p-value for chi-square.}
 }
 \description{
 Functions for estimating differential item functioning with a set of

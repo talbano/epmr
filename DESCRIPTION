@@ -15,7 +15,7 @@ Imports: lme4, dplyr, ggplot2
 Encoding: UTF-8
 License: GPL-3 + file LICENSE
 LazyData: true
-RoxygenNote: 7.1.0
+RoxygenNote: 7.2.0
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr

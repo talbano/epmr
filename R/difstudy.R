@@ -16,6 +16,7 @@
 #' with complete data.
 #' @param na.rm logical with default \code{FALSE} specifying whether missings
 #' should be removed before calculating individual descriptives.
+#' @param p_cut numeric cutoff for evaluating the p-value for chi-square.
 #'
 #' @examples
 #' # Calculate total reading scores, as in Chapter 2
@@ -31,7 +32,7 @@
 #'
 #' @export
 difstudy <- function(x, groups, focal = groups[1], scores = NULL,
-  subset = 1:ncol(x), complete = TRUE, na.rm = FALSE) {
+  subset = 1:ncol(x), complete = TRUE, na.rm = FALSE, p_cut = 0.05) {
   if (!all(unlist(x) %in% c(0, 1, NA)))
     stop("'x' can only contain score values 0, 1, and NA.")
   if (complete)
@@ -46,47 +47,57 @@ difstudy <- function(x, groups, focal = groups[1], scores = NULL,
     stop("only two levels supported in 'groups'")
   if (!focal %in% groups)
     stop("'groups' must contain one or more values coded as 'focal'")
-  out <- mhd(x, groups, focal, scores)
+  out <- mhd(x, groups, focal, scores, p_cut = p_cut)
   class(out) <- c("difstudy", "data.frame")
   return(out)
 }
 
 # Dichotomous Mantel-Haenszel DIF
 #' @rdname difstudy
-mhd <- function(x, groups, focal, scores) {
+mhd <- function(x, groups, focal, scores, p_cut = 0.05) {
   ni <- ncol(x)
   x_scale <- sort(unique(scores))
   ns <- length(x_scale)
-  out <- data.frame(mh = numeric(ni), chisq = numeric(ni))
+  out <- data.frame(rn = numeric(ni), fn = numeric(ni), r1 = numeric(ni),
+    f1 = numeric(ni), r0 = numeric(ni), f0 = numeric(ni), mh = numeric(ni),
+    chisq = numeric(ni))
   for (i in 1:ni) {
     xi <- unlist(x[, i])
-    if (sd(xi) == 0)
+    y <- table(xi, groups == focal, scores)
+    out$rn[i] <- sum(y[, 1, ])
+    out$fn[i] <- sum(y[, 2, ])
+    out$r1[i] <- sum(y[2, 1, ])
+    out$r0[i] <- sum(y[1, 1, ])
+    out$f1[i] <- sum(y[2, 2, ])
+    out$f0[i] <- sum(y[1, 2, ])
+    if (sd(xi, na.rm = TRUE) == 0)
       out$mh[i] <- out$chisq[i] <- NA
     else {
-      y <- table(xi, groups == focal, scores)
       n_a <- y[2, 1, ] # correct, reference
       n_b <- y[1, 1, ] # incorrect, reference
       n_c <- y[2, 2, ] # correct, focal
       n_d <- y[1, 2, ] # incorrect, focal
-      n_cor <- n_a + n_c
-      n_inc <- n_b + n_d
-      n_ref <- n_a + n_b
-      n_foc <- n_c + n_d
+      n_cor <- as.numeric(n_a + n_c)
+      n_inc <- as.numeric(n_b + n_d)
+      n_ref <- as.numeric(n_a + n_b)
+      n_foc <- as.numeric(n_c + n_d)
       n_t <- apply(y, 3, sum)
       e_a <- n_ref * n_cor / n_t
       v_a <- (n_ref * n_cor * n_foc * n_inc) / (n_t^2 * (n_t - 1))
-      out$mh[i] <- sum(n_a * n_d / n_t) / sum(n_b * n_c / n_t)
-      out$chisq[i] <- (abs(sum(n_a) - sum(e_a)) - .5)^2 / sum(v_a)
+      out$mh[i] <- sum(n_a * n_d / n_t, na.rm = TRUE) /
+        sum(n_b * n_c / n_t, na.rm = TRUE)
+      out$chisq[i] <- (abs(sum(n_a, na.rm = TRUE) - sum(e_a, na.rm = TRUE)) -
+          .5)^2 / sum(v_a, na.rm = TRUE)
     }
   }
   out$delta <- log(out$mh) * -2.35
   out$delta_abs <- abs(out$delta)
   out$chisq_p <- pchisq(out$chisq, 1, lower.tail = FALSE)
   out$ets_level <- ""
-  out$ets_level[out$delta_abs < 1 | out$chisq_p >= .05] <- "a"
-  out$ets_level[out$delta_abs > 1 & out$delta_abs < 1.5 &
-    out$chisq_p < .05] <- "b"
-  out$ets_level[out$delta_abs > 1.5 & out$chisq_p < .05] <- "c"
+  out$ets_level[out$delta_abs < 1 | out$chisq_p >= p_cut] <- "a"
+  out$ets_level[out$delta_abs >= 1 & out$delta_abs < 1.5 &
+    out$chisq_p < p_cut] <- "b"
+  out$ets_level[out$delta_abs >= 1.5 & out$chisq_p < p_cut] <- "c"
   out <- out[, c("mh", "delta", "delta_abs", "chisq", "chisq_p", "ets_level")]
   return(out)
 }
