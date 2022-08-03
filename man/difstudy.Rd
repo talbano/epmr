@@ -10,7 +10,8 @@ difstudy(
   groups,
   focal = groups[1],
   scores = NULL,
-  subset = 1:ncol(x),
+  anchor_items = 1:ncol(x),
+  dif_items = 1:ncol(x),
   complete = TRUE,
   na.rm = FALSE,
   p_cut = 0.05
@@ -27,10 +28,17 @@ mhd(x, groups, focal, scores, p_cut = 0.05)
 to represent the focal group, defaulting to \code{groups[1]}.}
 
 \item{scores}{optional vector of construct scores, defaulting to row sums
-over \code{x} when \code{NULL}.}
+over all columns in \code{x} when \code{NULL} and \code{anchor_items} is
+not specified.}
 
-\item{subset}{optional vector for selecting a subset of columns from
-\code{x} that contain scored item responses.}
+\item{anchor_items}{vector of item names or column numbers for
+identifying anchoring items in \code{x}. These will be used when finding
+construct scores if \code{scores} is missing, defaulting to all columns in
+\code{x}.}
+
+\item{dif_items}{vector of item names or column numbers identifying what
+items in \code{x} should be analyzed for DIF, defaulting
+to all columns in \code{x}.}
 
 \item{complete}{logical with default \code{TRUE} indicating whether or not
 \code{x}, \code{groups}, and \code{scores} should be reduced to cases
@@ -39,7 +47,8 @@ with complete data.}
 \item{na.rm}{logical with default \code{FALSE} specifying whether missings
 should be removed before calculating individual descriptives.}
 
-\item{p_cut}{numeric cutoff for evaluating the p-value for chi-square.}
+\item{p_cut}{numeric cutoff for evaluating the p-value for the
+Mantel-Haenszel chi-square, with default 0.05.}
 }
 \description{
 Functions for estimating differential item functioning with a set of

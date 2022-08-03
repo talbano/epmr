@@ -8,15 +8,22 @@
 #' @param focal string identifying label used in \code{groups}
 #' to represent the focal group, defaulting to \code{groups[1]}.
 #' @param scores optional vector of construct scores, defaulting to row sums
-#' over \code{x} when \code{NULL}.
-#' @param subset optional vector for selecting a subset of columns from
-#' \code{x} that contain scored item responses.
+#' over all columns in \code{x} when \code{NULL} and \code{anchor_items} is
+#' not specified.
+#' @param anchor_items vector of item names or column numbers for
+#' identifying anchoring items in \code{x}. These will be used when finding
+#' construct scores if \code{scores} is missing, defaulting to all columns in
+#' \code{x}.
+#' @param dif_items vector of item names or column numbers identifying what
+#' items in \code{x} should be analyzed for DIF, defaulting
+#' to all columns in \code{x}.
 #' @param complete logical with default \code{TRUE} indicating whether or not
 #' \code{x}, \code{groups}, and \code{scores} should be reduced to cases
 #' with complete data.
 #' @param na.rm logical with default \code{FALSE} specifying whether missings
 #' should be removed before calculating individual descriptives.
-#' @param p_cut numeric cutoff for evaluating the p-value for chi-square.
+#' @param p_cut numeric cutoff for evaluating the p-value for the
+#' Mantel-Haenszel chi-square, with default 0.05.
 #'
 #' @examples
 #' # Calculate total reading scores, as in Chapter 2
@@ -32,22 +39,24 @@
 #'
 #' @export
 difstudy <- function(x, groups, focal = groups[1], scores = NULL,
-  subset = 1:ncol(x), complete = TRUE, na.rm = FALSE, p_cut = 0.05) {
+  anchor_items = 1:ncol(x), dif_items = 1:ncol(x), complete = TRUE,
+  na.rm = FALSE, p_cut = 0.05) {
   if (!all(unlist(x) %in% c(0, 1, NA)))
     stop("'x' can only contain score values 0, 1, and NA.")
   if (complete)
     xc <- complete.cases(x, groups, scores)
   else xc <- 1:nrow(x)
-  x <- x[xc, subset]
+  x <- x[xc, ]
   if (is.null(scores))
-    scores <- rowSums(x, na.rm = na.rm)
+    scores <- rowSums(x[, anchor_items], na.rm = na.rm)
   else scores <- scores[xc]
   groups <- as.character(groups[xc])
   if (length(unique(groups)) != 2)
     stop("only two levels supported in 'groups'")
   if (!focal %in% groups)
     stop("'groups' must contain one or more values coded as 'focal'")
-  out <- mhd(x, groups, focal, scores, p_cut = p_cut)
+  out <- mhd(x[, dif_items], groups, focal, scores, p_cut = p_cut)
+  out <- data.frame(item = paste(dif_items), out)
   class(out) <- c("difstudy", "data.frame")
   return(out)
 }
@@ -98,7 +107,8 @@ mhd <- function(x, groups, focal, scores, p_cut = 0.05) {
   out$ets_level[out$delta_abs >= 1 & out$delta_abs < 1.5 &
     out$chisq_p < p_cut] <- "b"
   out$ets_level[out$delta_abs >= 1.5 & out$chisq_p < p_cut] <- "c"
-  out <- out[, c("mh", "delta", "delta_abs", "chisq", "chisq_p", "ets_level")]
+  out <- out[, c("rn", "fn", "r1", "f1", "r0", "f0", "mh", "delta",
+    "delta_abs", "chisq", "chisq_p", "ets_level")]
   return(out)
 }
 
