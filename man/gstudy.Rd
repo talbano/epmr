@@ -53,16 +53,16 @@ for estimating reliability in multi-faceted designs.
 }
 \section{Methods (by class)}{
 \itemize{
-\item \code{default}: Method defaults to formula interface.
+\item \code{gstudy(default)}: Method defaults to formula interface.
 
-\item \code{formula}: Method for formula objects.
+\item \code{gstudy(formula)}: Method for formula objects.
 
-\item \code{data.frame}: Method for wide data frames with people as rows and a
+\item \code{gstudy(data.frame)}: Method for wide data frames with people as rows and a
 single facet as columns
 
-\item \code{merMod}: Method for objects of class \code{\link{merMod}}.
-}}
+\item \code{gstudy(merMod)}: Method for objects of class \code{\link{merMod}}.
 
+}}
 \examples{
 # Reading items
 ritems <- c("r414q02", "r414q11", "r414q06", "r414q09",
