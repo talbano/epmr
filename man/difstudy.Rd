@@ -15,10 +15,10 @@ difstudy(
   complete = TRUE,
   na.rm = FALSE,
   p_cut = 0.05,
-  std_w = c("focal", "reference", "total")
+  sdp_w = c("focal", "reference", "total")
 )
 
-dif_prop(x, groups, focal, scores, p_cut, std_w)
+dif_prop(x, groups, focal, scores, p_cut, sdp_w)
 }
 \arguments{
 \item{x}{matrix or data.frame of scored item responses.}
@@ -51,7 +51,7 @@ should be removed before calculating individual descriptives.}
 \item{p_cut}{numeric cutoff for evaluating the p-value for the
 Mantel-Haenszel chi-square, with default 0.05.}
 
-\item{std_w}{string for choosing the weight when finding the standardized
+\item{sdp_w}{string for choosing the weight when finding the standardized
 difference statistic, defaulting to the number of test takers in the
 focal group.}
 }
