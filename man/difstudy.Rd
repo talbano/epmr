@@ -2,22 +2,23 @@
 % Please edit documentation in R/difstudy.R
 \name{difstudy}
 \alias{difstudy}
-\alias{mhd}
+\alias{dif_prop}
 \title{Differential Item Functioning Study}
 \usage{
 difstudy(
   x,
   groups,
-  focal = groups[1],
+  focal,
   scores = NULL,
   anchor_items = 1:ncol(x),
   dif_items = 1:ncol(x),
   complete = TRUE,
   na.rm = FALSE,
-  p_cut = 0.05
+  p_cut = 0.05,
+  std_w = c("focal", "reference", "total")
 )
 
-mhd(x, groups, focal, scores, p_cut = 0.05)
+dif_prop(x, groups, focal, scores, p_cut, std_w)
 }
 \arguments{
 \item{x}{matrix or data.frame of scored item responses.}
@@ -25,7 +26,7 @@ mhd(x, groups, focal, scores, p_cut = 0.05)
 \item{groups}{vector defining dichotomous grouping variable.}
 
 \item{focal}{string identifying label used in \code{groups}
-to represent the focal group, defaulting to \code{groups[1]}.}
+to represent the focal group, with no default.}
 
 \item{scores}{optional vector of construct scores, defaulting to row sums
 over all columns in \code{x} when \code{NULL} and \code{anchor_items} is
@@ -49,6 +50,10 @@ should be removed before calculating individual descriptives.}
 
 \item{p_cut}{numeric cutoff for evaluating the p-value for the
 Mantel-Haenszel chi-square, with default 0.05.}
+
+\item{std_w}{string for choosing the weight when finding the standardized
+difference statistic, defaulting to the number of test takers in the
+focal group.}
 }
 \description{
 Functions for estimating differential item functioning with a set of

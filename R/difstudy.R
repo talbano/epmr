@@ -6,7 +6,7 @@
 #' @param x matrix or data.frame of scored item responses.
 #' @param groups vector defining dichotomous grouping variable.
 #' @param focal string identifying label used in \code{groups}
-#' to represent the focal group, defaulting to \code{groups[1]}.
+#' to represent the focal group, with no default.
 #' @param scores optional vector of construct scores, defaulting to row sums
 #' over all columns in \code{x} when \code{NULL} and \code{anchor_items} is
 #' not specified.
@@ -24,6 +24,9 @@
 #' should be removed before calculating individual descriptives.
 #' @param p_cut numeric cutoff for evaluating the p-value for the
 #' Mantel-Haenszel chi-square, with default 0.05.
+#' @param std_w string for choosing the weight when finding the standardized
+#' difference statistic, defaulting to the number of test takers in the
+#' focal group.
 #'
 #' @examples
 #' # Calculate total reading scores, as in Chapter 2
@@ -38,9 +41,9 @@
 #' difstudy(x = x_items, groups = groups, focal = "f", scores = x_totals)
 #'
 #' @export
-difstudy <- function(x, groups, focal = groups[1], scores = NULL,
+difstudy <- function(x, groups, focal, scores = NULL,
   anchor_items = 1:ncol(x), dif_items = 1:ncol(x), complete = TRUE,
-  na.rm = FALSE, p_cut = 0.05) {
+  na.rm = FALSE, p_cut = 0.05, std_w = c("focal", "reference", "total")) {
   if (!all(unlist(x) %in% c(0, 1, NA)))
     stop("'x' can only contain score values 0, 1, and NA.")
   if (complete)
@@ -55,21 +58,22 @@ difstudy <- function(x, groups, focal = groups[1], scores = NULL,
     stop("only two levels supported in 'groups'")
   if (!focal %in% groups)
     stop("'groups' must contain one or more values coded as 'focal'")
-  out <- mhd(x[, dif_items], groups, focal, scores, p_cut = p_cut)
+  std_w <- match.arg(std_w)
+  out <- dif_prop(x[, dif_items], groups, focal, scores, p_cut, std_w)
   out <- data.frame(item = paste(dif_items), out)
   class(out) <- c("difstudy", "data.frame")
   return(out)
 }
 
-# Dichotomous Mantel-Haenszel DIF
+# Dichotomous Mantel-Haenszel and Standardization DIF
 #' @rdname difstudy
-mhd <- function(x, groups, focal, scores, p_cut = 0.05) {
+dif_prop <- function(x, groups, focal, scores, p_cut, std_w) {
   ni <- ncol(x)
   x_scale <- sort(unique(scores))
   ns <- length(x_scale)
   out <- data.frame(rn = numeric(ni), fn = numeric(ni), r1 = numeric(ni),
     f1 = numeric(ni), r0 = numeric(ni), f0 = numeric(ni), mh = numeric(ni),
-    chisq = numeric(ni))
+    chisq = numeric(ni), std = numeric(ni))
   for (i in 1:ni) {
     xi <- unlist(x[, i])
     y <- table(xi, groups == focal, scores)
@@ -97,6 +101,9 @@ mhd <- function(x, groups, focal, scores, p_cut = 0.05) {
         sum(n_b * n_c / n_t, na.rm = TRUE)
       out$chisq[i] <- (abs(sum(n_a, na.rm = TRUE) - sum(e_a, na.rm = TRUE)) -
           .5)^2 / sum(v_a, na.rm = TRUE)
+      k <- switch(std_w, focal = n_foc, reference = n_ref, total = n_t)
+      out$std[i] <- sum(k * (n_c / n_foc - n_a / n_ref), na.rm = TRUE) /
+        sum(k, na.rm = TRUE)
     }
   }
   out$delta <- log(out$mh) * -2.35
@@ -107,14 +114,17 @@ mhd <- function(x, groups, focal, scores, p_cut = 0.05) {
   out$ets_level[out$delta_abs >= 1 & out$delta_abs < 1.5 &
     out$chisq_p < p_cut] <- "b"
   out$ets_level[out$delta_abs >= 1.5 & out$chisq_p < p_cut] <- "c"
+  out$std_level <- symnum(abs(out$std), cutpoints = c(0, .05, .1, Inf),
+    symbols = c("none", "suspicious", "likely"), legend = FALSE)
   out <- out[, c("rn", "fn", "r1", "f1", "r0", "f0", "mh", "delta",
-    "delta_abs", "chisq", "chisq_p", "ets_level")]
+    "delta_abs", "chisq", "chisq_p", "ets_level", "std", "std_level")]
   return(out)
 }
 
 #' @export
-print.difstudy <- function(x, digits = 3, ...) {
+print.difstudy <- function(x, digits = 2, ...) {
   cat("\nDifferential Item Functioning Study\n\n")
   print.data.frame(x, digits = digits, ...)
   cat("\n")
 }
+
