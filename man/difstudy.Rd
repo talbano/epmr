@@ -2,14 +2,16 @@
 % Please edit documentation in R/difstudy.R
 \name{difstudy}
 \alias{difstudy}
-\alias{dif_prop}
+\alias{dif_cat}
+\alias{dif_lr}
 \title{Differential Item Functioning Study}
 \usage{
 difstudy(
   x,
   groups,
-  focal,
+  ref,
   scores = NULL,
+  method = c("mh", "lr"),
   anchor_items = 1:ncol(x),
   dif_items = 1:ncol(x),
   complete = TRUE,
@@ -18,19 +20,24 @@ difstudy(
   sdp_w = c("focal", "reference", "total")
 )
 
-dif_prop(x, groups, focal, scores, p_cut, sdp_w)
+dif_cat(x, groups, ref, scores, p_cut, sdp_w)
+
+dif_lr(x, groups, scores, p_cut)
 }
 \arguments{
 \item{x}{matrix or data.frame of scored item responses.}
 
 \item{groups}{vector defining dichotomous grouping variable.}
 
-\item{focal}{string identifying label used in \code{groups}
-to represent the focal group, with no default.}
+\item{ref}{string identifying label used in \code{groups}
+to represent the reference group, with no default.}
 
 \item{scores}{optional vector of construct scores, defaulting to row sums
 over all columns in \code{x} when \code{NULL} and \code{anchor_items} is
 not specified.}
+
+\item{method}{what DIF method to use, with \code{"mh"} for Mantel-Haenszel
+and \code{"lr"} for logistic regression.}
 
 \item{anchor_items}{vector of item names or column numbers for
 identifying anchoring items in \code{x}. These will be used when finding
@@ -56,7 +63,7 @@ difference statistic, defaulting to the number of test takers in the
 focal group.}
 }
 \description{
-Functions for estimating differential item functioning with a set of
+Functions for estimating differential item functioning (DIF) with a set of
 scored item responses.
 }
 \examples{
@@ -69,6 +76,10 @@ x_items <- PISA09[PISA09$cnt == "BEL", rsitems]
 x_items <- na.omit(x_items)
 groups <- sample(c("m", "f"), nrow(x_items), replace = TRUE)
 x_totals <- rowSums(x_items, na.rm = TRUE)
-difstudy(x = x_items, groups = groups, focal = "f", scores = x_totals)
+# Uniform DIF with Mantel-Haenszel
+difstudy(x = x_items, groups = groups, ref = "m", scores = x_totals,
+method = "mh")
+# Uniform and nonuniform DIF with logistic regression
+difstudy(x = x_items, groups = groups, ref = "m", method = "lr")
 
 }

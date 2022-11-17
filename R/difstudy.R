@@ -1,15 +1,17 @@
 #' Differential Item Functioning Study
 #'
-#' Functions for estimating differential item functioning with a set of
+#' Functions for estimating differential item functioning (DIF) with a set of
 #' scored item responses.
 #'
 #' @param x matrix or data.frame of scored item responses.
 #' @param groups vector defining dichotomous grouping variable.
-#' @param focal string identifying label used in \code{groups}
-#' to represent the focal group, with no default.
+#' @param ref string identifying label used in \code{groups}
+#' to represent the reference group, with no default.
 #' @param scores optional vector of construct scores, defaulting to row sums
 #' over all columns in \code{x} when \code{NULL} and \code{anchor_items} is
 #' not specified.
+#' @param method what DIF method to use, with \code{"mh"} for Mantel-Haenszel
+#' and \code{"lr"} for logistic regression.
 #' @param anchor_items vector of item names or column numbers for
 #' identifying anchoring items in \code{x}. These will be used when finding
 #' construct scores if \code{scores} is missing, defaulting to all columns in
@@ -38,12 +40,17 @@
 #' x_items <- na.omit(x_items)
 #' groups <- sample(c("m", "f"), nrow(x_items), replace = TRUE)
 #' x_totals <- rowSums(x_items, na.rm = TRUE)
-#' difstudy(x = x_items, groups = groups, focal = "f", scores = x_totals)
+#' # Uniform DIF with Mantel-Haenszel
+#' difstudy(x = x_items, groups = groups, ref = "m", scores = x_totals,
+#' method = "mh")
+#' # Uniform and nonuniform DIF with logistic regression
+#' difstudy(x = x_items, groups = groups, ref = "m", method = "lr")
 #'
 #' @export
-difstudy <- function(x, groups, focal, scores = NULL,
+difstudy <- function(x, groups, ref, scores = NULL, method = c("mh", "lr"),
   anchor_items = 1:ncol(x), dif_items = 1:ncol(x), complete = TRUE,
   na.rm = FALSE, p_cut = 0.05, sdp_w = c("focal", "reference", "total")) {
+  x <- as.data.frame(x)
   if (!all(unlist(x) %in% c(0, 1, NA)))
     stop("'x' can only contain score values 0, 1, and NA.")
   if (complete)
@@ -53,36 +60,38 @@ difstudy <- function(x, groups, focal, scores = NULL,
   if (is.null(scores))
     scores <- rowSums(x[, anchor_items], na.rm = na.rm)
   else scores <- scores[xc]
-  groups <- as.character(groups[xc])
-  if (length(unique(groups)) != 2)
-    stop("only two levels supported in 'groups'")
-  if (!focal %in% groups)
-    stop("'groups' must contain one or more values coded as 'focal'")
+  if (!ref %in% groups)
+    stop("'groups' must contain one or more values coded as 'ref'")
+  groups <- relevel(factor(groups[xc]), ref = ref)
+  counts <- t(apply(x, 2, function(i) unlist(tapply(i, groups, table))))
+  colnames(counts) <- c("r0", "r1", "f0", "f1") # Generalize
+  method <- match.arg(method)
   sdp_w <- match.arg(sdp_w)
-  out <- dif_prop(x[, dif_items], groups, focal, scores, p_cut, sdp_w)
-  out <- data.frame(item = paste(dif_items), out)
-  class(out) <- c("difstudy", "data.frame")
+  if (method == "mh") {
+    dif_out <- dif_cat(x[, dif_items], groups, ref, scores, p_cut, sdp_w)
+    rownames(dif_out) <- rownames(counts) <- colnames(x)[dif_items]
+    out <- list(uniform = dif_out, counts = counts, method = method)
+  }
+  else if (method == "lr") {
+    dif_out <- dif_lr(x[, dif_items], groups, scores, p_cut)
+    rownames(dif_out$uniform) <- rownames(dif_out$nonuniform) <-
+      rownames(dif_out$both) <- rownames(counts) <- colnames(x)[dif_items]
+    out <- c(dif_out, counts = list(counts), method = method)
+  }
+  class(out) <- c("difstudy", "list")
   return(out)
 }
 
 # Dichotomous Mantel-Haenszel and Standardization DIF
 #' @rdname difstudy
-dif_prop <- function(x, groups, focal, scores, p_cut, sdp_w) {
+dif_cat <- function(x, groups, ref, scores, p_cut, sdp_w) {
   ni <- ncol(x)
   x_scale <- sort(unique(scores))
   ns <- length(x_scale)
-  out <- data.frame(rn = numeric(ni), fn = numeric(ni), r1 = numeric(ni),
-    f1 = numeric(ni), r0 = numeric(ni), f0 = numeric(ni), mh = numeric(ni),
-    chisq = numeric(ni), sdp = numeric(ni))
+  out <- data.frame(mh = numeric(ni), chisq = numeric(ni), sdp = numeric(ni))
   for (i in 1:ni) {
     xi <- unlist(x[, i])
-    y <- table(xi, groups == focal, scores)
-    out$rn[i] <- sum(y[, 1, ])
-    out$fn[i] <- sum(y[, 2, ])
-    out$r1[i] <- sum(y[2, 1, ])
-    out$r0[i] <- sum(y[1, 1, ])
-    out$f1[i] <- sum(y[2, 2, ])
-    out$f0[i] <- sum(y[1, 2, ])
+    y <- table(xi, groups != ref, scores)
     if (sd(xi, na.rm = TRUE) == 0)
       out$mh[i] <- out$chisq[i] <- NA
     else {
@@ -109,22 +118,93 @@ dif_prop <- function(x, groups, focal, scores, p_cut, sdp_w) {
   out$delta <- log(out$mh) * -2.35
   out$delta_abs <- abs(out$delta)
   out$chisq_p <- pchisq(out$chisq, 1, lower.tail = FALSE)
-  out$ets_level <- out$sdp_level <- ""
-  out$ets_level[out$delta_abs < 1 | out$chisq_p >= p_cut] <- "a"
-  out$ets_level[out$delta_abs >= 1 & out$delta_abs < 1.5 &
+  out$ets_lev <- out$sdp_lev <- ""
+  out$ets_lev[out$delta_abs < 1 | out$chisq_p >= p_cut] <- "a"
+  out$ets_lev[out$delta_abs >= 1 & out$delta_abs < 1.5 &
     out$chisq_p < p_cut] <- "b"
-  out$ets_level[out$delta_abs >= 1.5 & out$chisq_p < p_cut] <- "c"
-  out$sdp_level[abs(out$sdp) < .05] <- "a"
-  out$sdp_level[abs(out$sdp) >= .05 & abs(out$sdp) < .10] <- "b"
-  out$sdp_level[abs(out$sdp) >= .10] <- "c"
-  out <- out[, c("rn", "fn", "r1", "f1", "r0", "f0", "mh", "delta",
-    "delta_abs", "chisq", "chisq_p", "ets_level", "sdp", "sdp_level")]
+  out$ets_lev[out$delta_abs >= 1.5 & out$chisq_p < p_cut] <- "c"
+  out$sdp_lev[abs(out$sdp) < .05] <- "a"
+  out$sdp_lev[abs(out$sdp) >= .05 & abs(out$sdp) < .10] <- "b"
+  out$sdp_lev[abs(out$sdp) >= .10] <- "c"
+  out <- out[, c("mh", "delta", "chisq", "chisq_p", "ets_lev", "sdp",
+    "sdp_lev")]
+  return(out)
+}
+
+# Dichotomous Logistic Regression DIF
+#' @rdname difstudy
+dif_lr <- function(x, groups, scores, p_cut) {
+  ni <- ncol(x)
+  glm_n <- glm_u <- glm_x <- vector("list", ni)
+  for (i in 1:ni) {
+    temp_df <- data.frame(y = x[[i]], t = scores, g = groups)
+    glm_n[[i]] <- glm(y ~ t, family = "binomial", data = temp_df)
+    glm_u[[i]] <- glm(y ~ t + g, family = "binomial", data = temp_df)
+    glm_x[[i]] <- glm(y ~ t * g, family = "binomial", data = temp_df)
+  }
+  dev <- cbind(sapply(glm_n, deviance),
+    sapply(glm_u, deviance), sapply(glm_x, deviance))
+  r2 <- cbind(sapply(glm_n, r2_nag),
+    sapply(glm_u, r2_nag), sapply(glm_x, r2_nag))
+  deg <- cbind(sapply(glm_n, df.residual),
+    sapply(glm_u, df.residual), sapply(glm_x, df.residual))
+  chi <- cbind(dev[, 1] - dev[, 2:3], dev[, 2] - dev[, 3])
+  chidf <- cbind(deg[, 1] - deg[, 2:3], deg[, 2] - deg[, 3])
+  r2d <- cbind(r2[, 2:3] - r2[, 1], r2[, 3] - r2[, 2])
+  chip <- pchisq(chi, chidf, lower.tail = FALSE)
+  dif <- lapply(1:3, function(i)
+    data.frame(chisq = chi[, i], chisq_df = chidf[, i],
+      chisq_p = chip[, i], r2d = r2d[, i],
+      zum_lev = rd_zum(r2d[, i], chip[, i], p_cut),
+      jod_lev = rd_jod(r2d[, i], chip[, i], p_cut)))
+  out <- list(uniform = dif[[1]], nonuniform = dif[[3]], both = dif[[2]],
+    deviance = dev, r2 = r2, glm_n = glm_n,
+    glm_u = glm_u, glm_x = glm_x)
   return(out)
 }
 
 #' @export
 print.difstudy <- function(x, digits = 2, ...) {
   cat("\nDifferential Item Functioning Study\n\n")
-  print.data.frame(x, digits = digits, ...)
+  cat(switch(x$method, mh = "Mantel-Haenszel", lr = "Logistic regression"),
+    "method\n\n")
+  cat("Uniform DIF\n\n")
+  print.data.frame(x$uniform, digits = digits, ...)
   cat("\n")
+  if (x$method == "lr") {
+    cat("Nonuniform DIF\n\n")
+    print.data.frame(x$nonuniform, digits = digits, ...)
+    cat("\nUniform and nonuniform DIF\n\n")
+    print.data.frame(x$both, digits = digits, ...)
+    cat("\n")
+  }
 }
+
+# Pseudo R2, Cox and Snell
+r2_cox <- function(object, n = length(object$y)) {
+  1 - exp((object$deviance - object$null.deviance) / n)
+}
+
+# Pseudo R2, Nagelkerke
+r2_nag <- function(object, n = length(object$y)) {
+  r2_cox(object, n) / (1 - exp(-object$null.deviance / n))
+}
+
+# R2 difference levels, Zumbo
+rd_zum <- function(x, p = rep(0, length(x)), p_cut = 0.05) {
+  out <- character(length(x))
+  out[x < 0.13] <- "a"
+  out[p < p_cut & x >= 0.13 & x < 0.26] <- "b"
+  out[p < p_cut & x >= 0.26] <- "c"
+  return(out)
+}
+
+# R2 difference levels, Jodoin
+rd_jod <- function(x, p = rep(0, length(x)), p_cut = 0.05) {
+  out <- character(length(x))
+  out[x < 0.035] <- "a"
+  out[p < p_cut & x >= 0.035 & x < 0.07] <- "b"
+  out[p < p_cut & x >= 0.07] <- "c"
+  return(out)
+}
+
