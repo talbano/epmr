@@ -2,8 +2,6 @@
 % Please edit documentation in R/difstudy.R
 \name{difstudy}
 \alias{difstudy}
-\alias{dif_cat}
-\alias{dif_lr}
 \title{Differential Item Functioning Study}
 \usage{
 difstudy(
@@ -19,10 +17,6 @@ difstudy(
   p_cut = 0.05,
   sdp_w = c("focal", "reference", "total")
 )
-
-dif_cat(x, groups, ref, scores, p_cut, sdp_w)
-
-dif_lr(x, groups, scores, p_cut)
 }
 \arguments{
 \item{x}{matrix or data.frame of scored item responses.}
@@ -67,19 +61,19 @@ Functions for estimating differential item functioning (DIF) with a set of
 scored item responses.
 }
 \examples{
-# Calculate total reading scores, as in Chapter 2
+# Vector of item names
 ritems <- c("r414q02", "r414q11", "r414q06", "r414q09",
   "r452q03", "r452q04", "r452q06", "r452q07", "r458q01",
   "r458q07", "r458q04")
 rsitems <- paste0(ritems, "s")
-x_items <- PISA09[PISA09$cnt == "BEL", rsitems]
-x_items <- na.omit(x_items)
-groups <- sample(c("m", "f"), nrow(x_items), replace = TRUE)
-x_totals <- rowSums(x_items, na.rm = TRUE)
+# Subset PISA09 to Belgium and Germany
+pisa <- subset(PISA09, cnt \%in\% c("BEL", "DEU"))
+x_totals <- rowSums(pisa[, rsitems], na.rm = TRUE)
 # Uniform DIF with Mantel-Haenszel
-difstudy(x = x_items, groups = groups, ref = "m", scores = x_totals,
-method = "mh")
+difstudy(x = pisa[, rsitems], groups = pisa$cnt, ref = "BEL",
+  scores = x_totals, method = "mh")
 # Uniform and nonuniform DIF with logistic regression
-difstudy(x = x_items, groups = groups, ref = "m", method = "lr")
+difstudy(x = pisa[, rsitems], groups = pisa$cnt, ref = "BEL",
+  method = "lr")
 
 }
