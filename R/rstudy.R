@@ -31,7 +31,7 @@
 #' rstudy(PISA09[PISA09$cnt == "JPN", rsitems], se = TRUE)
 #'
 #' @export
-rstudy <- function(x, n, sigma = FALSE, use = "pairwise", se = FALSE) {
+rstudy <- function(x, n, sigma = FALSE, use = "everything", se = FALSE) {
 
   alpha <- coef_alpha(x, n = n, sigma = sigma, use = use, se = se)
   omega <- coef_omega(x, sigma = sigma)
@@ -62,7 +62,7 @@ print.rstudy <- function(x, digits = 3, ...) {
 
 #' @rdname rstudy
 #' @export
-coef_alpha <- function(x, n = NULL, sigma = FALSE, use = "pairwise",
+coef_alpha <- function(x, n = NULL, sigma = FALSE, use = "everything",
   se = FALSE) {
 
   x <- as.matrix(x)
@@ -101,18 +101,20 @@ coef_alpha <- function(x, n = NULL, sigma = FALSE, use = "pairwise",
 
 #' @rdname rstudy
 #' @export
-coef_omega <- function(x, sigma = FALSE) {
+coef_omega <- function(x, sigma = FALSE, use = "everything") {
 
   x <- as.matrix(x)
   ni <- ncol(x)
 
   if (any(!dim(x)))
     return(NA)
-  if (!sigma)
-    x <- var(x, use = "complete")
+  if (!sigma) {
+    use <- match.arg(use, c("all.obs", "complete.obs", "pairwise.complete.obs",
+      "everything", "na.or.complete"))
+    x <- var(x, use = use)
+  }
 
-  lambda <- factanal(covmat = x,
-    factors = 1)$loadings[1:ni] * sqrt(diag(x))
+  lambda <- factanal(covmat = x, factors = 1)$loadings[1:ni] * sqrt(diag(x))
 
   return(sum(lambda)^2 / sum(x))
 }
