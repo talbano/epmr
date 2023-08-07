@@ -28,13 +28,13 @@
 #' ritems <- c("r414q02", "r414q11", "r414q06", "r414q09", "r452q03",
 #'   "r452q04", "r452q06", "r452q07", "r458q01", "r458q07", "r458q04")
 #' rsitems <- paste0(ritems, "s")
-#' rstudy(PISA09[PISA09$cnt == "JPN", rsitems], se = TRUE)
+#' rstudy(PISA09[PISA09$cnt == "JPN", rsitems], use = "complete", se = TRUE)
 #'
 #' @export
 rstudy <- function(x, n, sigma = FALSE, use = "everything", se = FALSE) {
 
   alpha <- coef_alpha(x, n = n, sigma = sigma, use = use, se = se)
-  omega <- coef_omega(x, sigma = sigma)
+  omega <- coef_omega(x, sigma = sigma, use = use)
   out <- list(alpha = alpha$alpha, omega = omega, ni = alpha$ni,
     sigma = alpha$sigma, sd = sqrt(sum(alpha$sigma)), n = alpha$n,
     q = alpha$q, alpha_se = alpha$se, alpha_ci = alpha$ci)

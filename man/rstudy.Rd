@@ -8,11 +8,11 @@
 \alias{sem}
 \title{Reliability Study}
 \usage{
-rstudy(x, n, sigma = FALSE, use = "pairwise", se = FALSE)
+rstudy(x, n, sigma = FALSE, use = "everything", se = FALSE)
 
-coef_alpha(x, n = NULL, sigma = FALSE, use = "pairwise", se = FALSE)
+coef_alpha(x, n = NULL, sigma = FALSE, use = "everything", se = FALSE)
 
-coef_omega(x, sigma = FALSE)
+coef_omega(x, sigma = FALSE, use = "everything")
 
 sb_r(r, k)
 
@@ -57,6 +57,6 @@ reliability, and estimating the standard error of measurement.
 ritems <- c("r414q02", "r414q11", "r414q06", "r414q09", "r452q03",
   "r452q04", "r452q06", "r452q07", "r458q01", "r458q07", "r458q04")
 rsitems <- paste0(ritems, "s")
-rstudy(PISA09[PISA09$cnt == "JPN", rsitems], se = TRUE)
+rstudy(PISA09[PISA09$cnt == "JPN", rsitems], use = "complete", se = TRUE)
 
 }
