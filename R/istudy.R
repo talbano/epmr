@@ -10,12 +10,13 @@
 #' @param subset optional vector for selecting a subset of columns from \code{x}.
 #' @param scores optional vector of construct scores used to calculate
 #' item discrimination.
+#' @param use string for specifying how to handle incomplete cases
 #' @return Returns a list with three elements: \code{item} containing a
 #' data.frame of item analysis output, \code{scale} containing descriptives
 #' for the full scale, and \code{reliability} containing a vector of
 #' internal consistency reliability estimates.
 #' @export
-istudy <- function(x, subset = 1:ncol(x), scores) {
+istudy <- function(x, subset = 1:ncol(x), scores, use = "everything") {
 
   x <- as.matrix(x[, subset])
   items <- data.frame(m = colMeans(x, na.rm = TRUE),
@@ -31,9 +32,9 @@ istudy <- function(x, subset = 1:ncol(x), scores) {
     items$itc2 <- apply(x, 2, function(y)
       cor(y, scores, use = "c"))
   items$aid <- sapply(1:ncol(x), function(i)
-		tryCatch(coef_alpha(x[, -i])$alpha, error = function(y) y))
+		tryCatch(coef_alpha(x[, -i], use = use)$alpha, error = function(y) y))
 
-	out <- list(items = items, alpha = tryCatch(coef_alpha(x)$alpha,
+	out <- list(items = items, alpha = tryCatch(coef_alpha(x, use = use)$alpha,
 	  error = function(e) e))
 	class(out) <- c("istudy", "list")
 

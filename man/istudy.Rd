@@ -4,7 +4,7 @@
 \alias{istudy}
 \title{Scored Item Study}
 \usage{
-istudy(x, subset = 1:ncol(x), scores)
+istudy(x, subset = 1:ncol(x), scores, use = "everything")
 }
 \arguments{
 \item{x}{matrix or data.frame of scored item responses.}
@@ -13,6 +13,8 @@ istudy(x, subset = 1:ncol(x), scores)
 
 \item{scores}{optional vector of construct scores used to calculate
 item discrimination.}
+
+\item{use}{string for specifying how to handle incomplete cases}
 }
 \value{
 Returns a list with three elements: \code{item} containing a
