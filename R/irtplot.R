@@ -40,17 +40,17 @@ ip_plot <- function(x, theta, b, groups = rep(1, length(theta)),
     if (missing(theta)) theta <- x$data$theta
     if (missing(b)) b <- x$ip$b
   }
-  df <- dplyr::tibble(theta = double(), source = character())
+  df <- tibble::tibble(theta = double(), source = character())
   if (!missing(theta)) {
     for (p in unique(groups))
-      df <- dplyr::bind_rows(df, dplyr::tibble(theta = theta[groups == p],
+      df <- dplyr::bind_rows(df, tibble::tibble(theta = theta[groups == p],
         source = paste("group", p)))
     if (length(unique(groups)) == 1)
       df$source <- gsub("group 1", "person", df$source)
   }
   if (!missing(b)) {
     for (i in unique(tests))
-      df <- dplyr::bind_rows(df, dplyr::data_frame(theta = b[tests == i],
+      df <- dplyr::bind_rows(df, tibble::tibble(theta = b[tests == i],
         source = paste("test", i)))
     if (length(unique(tests)) == 1)
       df$source <- gsub("test 1", "item", df$source)
@@ -71,7 +71,7 @@ irf_plot <- function(x, ip = x$ip, theta = seq(-4, 4, length = 100)) {
   irf <- rirf(ip, theta = theta)[, -1]
   item <- rep(colnames(irf), each = length(theta))
   p <- unlist(irf)
-  df <- dplyr::data_frame(theta = rep(theta, nrow(ip)), p = p,
+  df <- tibble::tibble(theta = rep(theta, nrow(ip)), p = p,
     item = item)
   out <- ggplot2::ggplot(df, ggplot2::aes(x = theta, y = p, color = item)) +
     ggplot2::geom_line()
@@ -81,7 +81,7 @@ irf_plot <- function(x, ip = x$ip, theta = seq(-4, 4, length = 100)) {
 #' @rdname irtplot
 #' @export
 tef_plot <- function(x, ip = x$ip, theta = seq(-4, 4, length = 100)) {
-  df <- dplyr::as_data_frame(rtef(ip, theta = theta))
+  df <- tibble::as_tibble(rtef(ip, theta = theta))
   se <- df$se
   out <- ggplot2::ggplot(df, ggplot2::aes(x = theta, y = se)) +
     ggplot2::geom_line()
