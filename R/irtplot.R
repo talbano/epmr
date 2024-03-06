@@ -58,7 +58,7 @@ ip_plot <- function(x, theta, b, groups = rep(1, length(theta)),
   out <- ggplot2::ggplot(df, ggplot2::aes(x = theta, fill = source))
   type <- match.arg(type, c("density", "frequency"))
   if (type == "density")
-    out <- out + ggplot2::geom_density(alpha = 0.2, size = 0)
+    out <- out + ggplot2::geom_density(alpha = 0.2, linewidth = 0)
   else
     out <- out + ggplot2::geom_histogram(alpha = 0.2, position = "identity")
   out <- out + ggplot2::theme(legend.title = ggplot2::element_blank())

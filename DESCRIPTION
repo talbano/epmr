@@ -11,7 +11,7 @@ Description: Contains tools for creating and evaluating educational and
     PISA study and the BDI-II.
 Depends:
     R (>= 4.0.0)
-Imports: lme4, dplyr, ggplot2
+Imports: lme4, dplyr, tibble, ggplot2
 Encoding: UTF-8
 License: GPL-3 + file LICENSE
 LazyData: true
