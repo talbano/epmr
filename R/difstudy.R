@@ -29,6 +29,8 @@
 #' @param sdp_w string for choosing the weight when finding the standardized
 #' difference statistic, defaulting to the number of test takers in the
 #' focal group.
+#' @param contrast_type string for the type of contrasts to use in logistic
+#' regression, defaulting to \code{"contr.treatment"}.
 #'
 #' @examples
 #' # Vector of item names
@@ -49,7 +51,8 @@
 #' @export
 difstudy <- function(x, groups, ref, scores = NULL, method = c("mh", "lr"),
   anchor_items = 1:ncol(x), dif_items = 1:ncol(x), complete = TRUE,
-  na.rm = FALSE, p_cut = 0.05, sdp_w = c("focal", "reference", "total")) {
+  na.rm = FALSE, p_cut = 0.05, sdp_w = c("focal", "reference", "total"),
+  contrast_type = "contr.treatment") {
   x <- as.data.frame(x)
   if (!all(unlist(x) %in% c(0, 1, NA)))
     stop("'x' can only contain score values 0, 1, and NA.")
@@ -61,22 +64,49 @@ difstudy <- function(x, groups, ref, scores = NULL, method = c("mh", "lr"),
     scores <- rowSums(x[, anchor_items], na.rm = na.rm)
   else scores <- scores[xc]
   groups <- relevel(factor(groups[xc]), ref = ref)
+  contrasts(groups) <- contrast_type
   method <- match.arg(method)
   sdp_w <- match.arg(sdp_w)
   if (method == "mh") {
-    dif_out <- dif_cat(x[, dif_items], groups, ref, scores, p_cut, sdp_w)
+    if (length(levels(groups)) > 2)
+      dif_out <- dif_gmh(x[, dif_items], groups, ref, scores)
+    else
+      dif_out <- dif_mh(x[, dif_items], groups, ref, scores, p_cut, sdp_w)
     out <- list(method = method, uniform = dif_out)
   }
   else if (method == "lr") {
     dif_out <- dif_lr(x[, dif_items], groups, scores, p_cut)
     out <- c(method = method, dif_out)
   }
+  out$reference <- ref
+  out$focal <- setdiff(levels(groups), ref)
   class(out) <- c("difstudy", "list")
   return(out)
 }
 
+# Dichotomous Generalized Mantel-Haenszel
+dif_gmh <- function(x, groups, ref, scores) {
+  ni <- ncol(x)
+  x_scale <- sort(unique(scores))
+  ns <- length(x_scale)
+  out <- data.frame(chisq = numeric(ni), chisq_p = numeric(ni))
+  for (i in 1:ni) {
+    xi <- unlist(x[, i])
+    y <- table(xi, groups, scores)
+    if (length(table(xi)) < 2)
+      out$chisq[i] <- NA
+    else {
+      temp_gmh <- mantelhaen.test(y)
+      out$chisq[i] <- temp_gmh$statistic
+      out$chisq_p[i] <- temp_gmh$p.value
+    }
+  }
+  rownames(out) <- colnames(x)
+  return(out)
+}
+
 # Dichotomous Mantel-Haenszel and Standardization DIF
-dif_cat <- function(x, groups, ref, scores, p_cut, sdp_w) {
+dif_mh <- function(x, groups, ref, scores, p_cut, sdp_w) {
   ni <- ncol(x)
   x_scale <- sort(unique(scores))
   ns <- length(x_scale)
@@ -84,7 +114,7 @@ dif_cat <- function(x, groups, ref, scores, p_cut, sdp_w) {
   for (i in 1:ni) {
     xi <- unlist(x[, i])
     y <- table(xi, groups != ref, scores)
-    if (sd(xi, na.rm = TRUE) == 0)
+    if (length(table(xi)) < 2)
       out$mh[i] <- out$chisq[i] <- NA
     else {
       n_a <- y[2, 1, ] # correct, reference
@@ -160,8 +190,9 @@ dif_lr <- function(x, groups, scores, p_cut) {
 #' @export
 print.difstudy <- function(x, digits = 2, ...) {
   cat("\nDifferential Item Functioning Study\n\n")
-  cat(switch(x$method, mh = "Mantel-Haenszel", lr = "Logistic regression"),
-    "method\n\n")
+  if (length(x$focal) > 1) cat("Generalized ")
+  cat(switch(x$method, mh = "Mantel-Haenszel", lr = "Logistic Regression"),
+    "Method\n\n")
   cat("Uniform DIF\n\n")
   print.data.frame(x$uniform, digits = digits, ...)
   cat("\n")

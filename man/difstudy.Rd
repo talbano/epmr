@@ -15,7 +15,8 @@ difstudy(
   complete = TRUE,
   na.rm = FALSE,
   p_cut = 0.05,
-  sdp_w = c("focal", "reference", "total")
+  sdp_w = c("focal", "reference", "total"),
+  contrast_type = "contr.treatment"
 )
 }
 \arguments{
@@ -55,6 +56,9 @@ Mantel-Haenszel chi-square, with default 0.05.}
 \item{sdp_w}{string for choosing the weight when finding the standardized
 difference statistic, defaulting to the number of test takers in the
 focal group.}
+
+\item{contrast_type}{string for the type of contrasts to use in logistic
+regression, defaulting to \code{"contr.treatment"}.}
 }
 \description{
 Functions for estimating differential item functioning (DIF) with a set of
