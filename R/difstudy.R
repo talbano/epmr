@@ -4,7 +4,7 @@
 #' scored item responses.
 #'
 #' @param x matrix or data.frame of scored item responses.
-#' @param groups vector defining dichotomous grouping variable.
+#' @param groups vector defining categorical grouping variable.
 #' @param ref string identifying label used in \code{groups}
 #' to represent the reference group, with no default.
 #' @param scores optional vector of construct scores, defaulting to row sums
@@ -60,9 +60,7 @@ difstudy <- function(x, groups, ref, scores = NULL, method = c("mh", "lr"),
   if (is.null(scores))
     scores <- rowSums(x[, anchor_items], na.rm = na.rm)
   else scores <- scores[xc]
-  groups <- data.frame(groups)[xc, , drop = FALSE]
-  for(i in seq_along(ref))
-    groups[, i] <- relevel(factor(groups[, i]), ref = ref[i])
+  groups <- relevel(factor(groups[xc]), ref = ref)
   method <- match.arg(method)
   sdp_w <- match.arg(sdp_w)
   if (method == "mh") {
@@ -85,7 +83,7 @@ dif_cat <- function(x, groups, ref, scores, p_cut, sdp_w) {
   out <- data.frame(mh = numeric(ni), chisq = numeric(ni), sdp = numeric(ni))
   for (i in 1:ni) {
     xi <- unlist(x[, i])
-    y <- table(xi, groups[, 1] != ref[1], scores)
+    y <- table(xi, groups != ref, scores)
     if (sd(xi, na.rm = TRUE) == 0)
       out$mh[i] <- out$chisq[i] <- NA
     else {

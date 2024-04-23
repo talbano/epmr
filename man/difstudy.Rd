@@ -21,7 +21,7 @@ difstudy(
 \arguments{
 \item{x}{matrix or data.frame of scored item responses.}
 
-\item{groups}{vector defining dichotomous grouping variable.}
+\item{groups}{vector defining categorical grouping variable.}
 
 \item{ref}{string identifying label used in \code{groups}
 to represent the reference group, with no default.}
