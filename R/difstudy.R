@@ -92,10 +92,11 @@ dif_gmh <- function(x, groups, ref, scores) {
   out <- data.frame(chisq = numeric(ni), chisq_p = numeric(ni))
   for (i in 1:ni) {
     xi <- unlist(x[, i])
-    y <- table(xi, groups, scores)
     if (length(table(xi)) < 2)
       out$chisq[i] <- NA
     else {
+      y <- table(xi, groups, scores)
+      y <- y[, , apply(y, 3L, sum) > 1]
       temp_gmh <- mantelhaen.test(y)
       out$chisq[i] <- temp_gmh$statistic
       out$chisq_p[i] <- temp_gmh$p.value
