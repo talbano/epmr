@@ -2,20 +2,22 @@ Package: epmr
 Title: Tools for Educational and Psychological Measurement
 Version: 0.0.0.9000
 Authors@R: person("Anthony", "Albano", email = "tony.d.albano@gmail.com", role = c("aut", "cre"))
-URL: https://github.com/talbano/epmr
-Description: Contains tools for creating and evaluating educational and
-    psychological measures, as used in the book Introduction to Educational and
-    Psychological Measurement: Using R. Methods support statistical analysis of
-    item performance, reliability, validity, and dimensionality, within both
-    classical and item response theory frameworks. Example data come from the 2009
-    PISA study and the BDI-II.
+URL: https://github.com/talbano/epmr, https://www.thetaminusb.com/intro-measurement-r/
+Description: The epmr package contains tools for creating and evaluating tests
+    in the social sciences, primarily in the contexts of education and
+    psychology. The package accompanies the book Introduction to Educational
+    and Psychological Measurement in R (free online, see link below). Example
+    data come from the 2009 PISA study and the BDI-II. Functions currently
+    support classical item and distractor analysis, reliability analysis,
+    factor analysis, some item response theory, and analysis of differential
+    item functioning.
 Depends:
     R (>= 4.0.0)
 Imports: lme4, dplyr, tibble, ggplot2
 Encoding: UTF-8
 License: GPL-3 + file LICENSE
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
