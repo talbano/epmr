@@ -61,7 +61,7 @@ difstudy <- function(x, groups, ref, scores = NULL, method = c("mh", "lr"),
   else xc <- 1:nrow(x)
   x <- x[xc, ]
   if (is.null(scores))
-    scores <- rowSums(x[, anchor_items], na.rm = na.rm)
+    scores <- rowSums(x[, anchor_items, drop = FALSE], na.rm = na.rm)
   else scores <- scores[xc]
   groups <- relevel(factor(groups[xc]), ref = ref)
   contrasts(groups) <- contrast_type
@@ -69,13 +69,14 @@ difstudy <- function(x, groups, ref, scores = NULL, method = c("mh", "lr"),
   sdp_w <- match.arg(sdp_w)
   if (method == "mh") {
     if (length(levels(groups)) > 2)
-      dif_out <- dif_gmh(x[, dif_items], groups, ref, scores)
+      dif_out <- dif_gmh(x[, dif_items, drop = FALSE], groups, ref, scores)
     else
-      dif_out <- dif_mh(x[, dif_items], groups, ref, scores, p_cut, sdp_w)
+      dif_out <- dif_mh(x[, dif_items, drop = FALSE], groups, ref, scores,
+        p_cut, sdp_w)
     out <- list(method = method, uniform = dif_out)
   }
   else if (method == "lr") {
-    dif_out <- dif_lr(x[, dif_items], groups, scores, p_cut)
+    dif_out <- dif_lr(x[, dif_items, drop = FALSE], groups, scores, p_cut)
     out <- c(method = method, dif_out)
   }
   out$reference <- ref
