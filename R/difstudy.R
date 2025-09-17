@@ -172,9 +172,9 @@ dif_lr <- function(x, groups, scores, p_cut) {
     sapply(glm_u, r2_nag), sapply(glm_x, r2_nag))
   deg <- cbind(sapply(glm_n, df.residual),
     sapply(glm_u, df.residual), sapply(glm_x, df.residual))
-  chi <- cbind(dev[, 1] - dev[, 2:3], dev[, 2] - dev[, 3])
-  chidf <- cbind(deg[, 1] - deg[, 2:3], deg[, 2] - deg[, 3])
-  r2d <- cbind(r2[, 2:3] - r2[, 1], r2[, 3] - r2[, 2])
+  chi <- cbind(rbind(dev[, 1] - dev[, 2:3]), dev[, 2] - dev[, 3])
+  chidf <- cbind(rbind(deg[, 1] - deg[, 2:3]), deg[, 2] - deg[, 3])
+  r2d <- cbind(rbind(r2[, 2:3] - r2[, 1]), r2[, 3] - r2[, 2])
   chip <- pchisq(chi, chidf, lower.tail = FALSE)
   dif <- lapply(1:3, function(i)
     data.frame(chisq = chi[, i], chisq_df = chidf[, i],
