@@ -5,7 +5,7 @@
 \alias{PISA09}
 \title{PISA 2009 Data}
 \format{
-A data frame with 44878 rows and 67 variables
+A data frame with 44878 rows and 125 variables
 }
 \source{
 \url{https://nces.ed.gov/surveys/pisa/}
@@ -48,8 +48,12 @@ Variables include
  \item atschl: numeric, attitude toward school scale score
  \item undrem: numeric, metacognition understanding and remembering scale score
  \item metasum: numeric, metacognition summarizing scale score
- \item r414q02 through r458q04: factor, unscored responses for 11 items
- \item r414q02s through r458q04s: numeric, scored responses for 11 items
+ \item r414q02 through r458q04: factor, unscored responses for 11 reading test items
+ \item s428q01 through s415q07t: factor, unscored responses for 17 science test items
+ \item m420q01t through m559q01: factor, unscored responses for 12 math test items
+ \item r414q02s through r458q04s: numeric, scored responses for 11 reading items
+ \item s428q01s through s415q07ts: numeric, scored responses for 17 science items
+ \item m420q01ts through m559q01s: numeric, scored responses for 12 math items
 }
 }
 \keyword{datasets}
