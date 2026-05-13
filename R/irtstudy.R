@@ -98,11 +98,11 @@ rirf <- function(ip, theta = seq(-4, 4, length = 100)){
 #' @export
 riif <- function(ip, theta = seq(-4, 4, length = 100)){
 
-  pr <- rirf(ip, theta)[, -1]
+  pr <- t(rirf(ip, theta)[, -1])
   ia <- ip[, 1]
   ic <- ip[, 3]
   qr <- 1 - pr
-  info <- ia^2 * ((pr - ic)^2 / (1 - ic)^2) * (qr / pr)
+  info <- t(ia^2 * (pr - ic)^2 * qr / (1 - ic)^2 / pr)
   out <- data.frame(theta = theta, info)
   return(out)
 }
